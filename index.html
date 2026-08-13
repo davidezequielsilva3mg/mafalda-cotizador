@@ -150,6 +150,9 @@
 
   .empty-hint { font-size:13px; color:#9BA1A4; }
 </style>
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 </head>
 <body>
 <div id="app">
@@ -390,11 +393,26 @@
     });
   }
 
+  // ── Firebase config ──────────────────────────────────────────────────────
+  var firebaseConfig = {
+    apiKey: "AIzaSyCbNFlEVmq5JLEowiX4_dJmco05t-1uRwM",
+    authDomain: "mafalda-grafica.firebaseapp.com",
+    projectId: "mafalda-grafica",
+    storageBucket: "mafalda-grafica.firebasestorage.app",
+    messagingSenderId: "1036113368691",
+    appId: "1:1036113368691:web:ed09d55b4e2806e5ee7c06"
+  };
+
+  // Inicializar Firebase
+  var fbApp = firebase.initializeApp(firebaseConfig);
+  var db = firebase.firestore(fbApp);
+  var DOC_REF = db.collection("cotizadorConfig").doc("data");
+
   async function loadData() {
     try {
-      var res = await window.storage.get(STORAGE_KEY, false);
-      if (res && res.value) {
-        var parsed = JSON.parse(res.value);
+      var snap = await DOC_REF.get();
+      if (snap.exists) {
+        var parsed = snap.data();
         if (parsed && parsed.products && parsed.prepCharges) {
           data = parsed;
           if (!data.ink) data.ink = JSON.parse(JSON.stringify(DEFAULT_DATA.ink));
@@ -406,16 +424,21 @@
         }
       }
     } catch (e) {
-      // primera vez, se usan los valores por defecto
+      console.error("Error cargando datos:", e);
     }
   }
 
+  // Debounce para no escribir en Firebase en cada tecla
+  var saveTimer = null;
   async function saveData() {
-    try {
-      await window.storage.set(STORAGE_KEY, JSON.stringify(data), false);
-    } catch (e) {
-      console.error("No se pudo guardar", e);
-    }
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(async function() {
+      try {
+        await DOC_REF.set(data);
+      } catch (e) {
+        console.error("No se pudo guardar", e);
+      }
+    }, 800);
   }
 
   // ---------- render: tintas ----------
