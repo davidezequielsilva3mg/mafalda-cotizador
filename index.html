@@ -155,21 +155,23 @@
 </head>
 <body>
 <div id="app">
-  <div class="header">
-    <div class="eyebrow"><div class="dot"></div><span>TALLER DE IMPRESIÓN</span></div>
-    <h1>Cotizador de Vinilos</h1>
-    <p class="subtitle">Superficie, mínimos, preparación y precio por unidad</p>
-  </div>
-
   <div class="layout">
     <nav class="sidebar">
       <button class="tab-btn active" data-tab="cotizador">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"></rect><line x1="8" y1="6" x2="16" y2="6"></line><line x1="8" y1="10" x2="8" y2="10"></line><line x1="12" y1="10" x2="12" y2="10"></line><line x1="16" y1="10" x2="16" y2="10"></line><line x1="8" y1="14" x2="8" y2="14"></line><line x1="12" y1="14" x2="12" y2="14"></line><line x1="16" y1="14" x2="16" y2="14"></line><line x1="8" y1="18" x2="8" y2="18"></line><line x1="12" y1="18" x2="12" y2="18"></line></svg>
         Cotizador
       </button>
+      <button class="tab-btn" data-tab="carteleria">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"></rect><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"></path></svg>
+        Cartelería
+      </button>
       <button class="tab-btn" data-tab="productos">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
-        Productos
+        Materiales
+      </button>
+      <button class="tab-btn" data-tab="bases">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+        Bases
       </button>
       <button class="tab-btn" data-tab="tintas">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"></path></svg>
@@ -178,10 +180,6 @@
       <button class="tab-btn" data-tab="prep">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
         Preparación
-      </button>
-      <button class="tab-btn" data-tab="bases">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
-        Bases
       </button>
     </nav>
 
@@ -254,12 +252,26 @@
         </section>
       </div>
 
+      <!-- Cartelería -->
+      <div class="tab-panel" data-panel="carteleria">
+        <section>
+          <div class="section-title">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"></rect><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"></path></svg>
+            <h2>Cartelería</h2>
+          </div>
+          <div style="text-align:center; padding:48px 24px; color:#555;">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#444" stroke-width="1.5" style="margin-bottom:16px;"><rect x="2" y="7" width="20" height="14" rx="2"></rect><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"></path></svg>
+            <p style="font-size:14px; color:#666;">Próximamente</p>
+          </div>
+        </section>
+      </div>
+
       <!-- Productos -->
       <div class="tab-panel" data-panel="productos">
         <section>
           <div class="section-title">
             <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
-            <h2>Productos</h2>
+            <h2>Materiales</h2>
           </div>
           <div id="productsList"></div>
           <div class="dashed row" style="padding:16px; margin-top:12px;">
@@ -402,6 +414,7 @@
 
   var data = JSON.parse(JSON.stringify(DEFAULT_DATA));
   var expanded = new Set();
+  var expandedBases = new Set();
   var quote = {
     productId: "1", prepIds: [], unit: "cm", mode: "simple",
     width: "", height: "",
@@ -540,14 +553,24 @@
 
   function baseCardHTML(b) {
     var calc = baseCostoM2(b);
-    return (
-      '<div class="card" style="margin-bottom:10px;" data-base-card="' + b.id + '">' +
-        '<div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">' +
-          '<input class="field pname" style="font-weight:700; font-size:15px; flex:1; margin-right:8px;" data-base-field="name" data-base-id="' + b.id + '" value="' + esc(b.name) + '" />' +
-          '<button class="btn-icon" data-base-delete="' + b.id + '">' +
-            '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path></svg>' +
-          '</button>' +
-        '</div>' +
+    var isOpen = expandedBases.has(b.id);
+    var chevronDown = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9BA1A4" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>';
+    var chevronUp   = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9BA1A4" stroke-width="2"><polyline points="18 15 12 9 6 15"></polyline></svg>';
+
+    // Header: nombre + m² costo y venta + chevron
+    var headerInfo = calc.area > 0
+      ? '<span class="row" style="gap:8px;">' +
+          '<span class="mono" style="font-size:12px; color:#F5C24B;">$' + fmt(calc.costoM2) + '/m² costo</span>' +
+          '<span class="mono" style="font-size:12px; color:#4ADE80;">$' + fmt(calc.ventaM2) + '/m² venta</span>' +
+          (isOpen ? chevronUp : chevronDown) +
+        '</span>'
+      : '<span class="row" style="gap:8px;">' +
+          '<span style="font-size:11px; color:#555;">sin datos</span>' +
+          (isOpen ? chevronUp : chevronDown) +
+        '</span>';
+
+    var bodyHTML = isOpen ? (
+      '<div class="product-body open" style="padding-top:12px;">' +
         '<div class="grid2" style="margin-bottom:10px;">' +
           '<div><span class="label">Ancho plancha (cm)</span>' +
             '<input type="number" inputmode="decimal" class="field mono" data-base-field="ancho" data-base-id="' + b.id + '" value="' + (b.ancho||"") + '" placeholder="100" /></div>' +
@@ -563,7 +586,7 @@
             '<input type="number" inputmode="decimal" class="field mono" data-base-field="ventaPlancha" data-base-id="' + b.id + '" value="' + (b.ventaPlancha||"") + '" placeholder="0" /></div>' +
         '</div>' +
         (calc.area > 0 ? (
-          '<div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">' +
+          '<div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:4px;">' +
             '<div class="final-box" style="margin:0;">' +
               '<span class="label2">Costo / m²</span>' +
               '<span class="value" style="color:#F5C24B;">$' + fmt(calc.costoM2) + '</span>' +
@@ -573,7 +596,25 @@
               '<span class="value" style="color:#4ADE80;">$' + fmt(calc.ventaM2) + '</span>' +
             '</div>' +
           '</div>'
-        ) : '<div style="font-size:12px; color:#555; text-align:center; padding:8px 0;">Completá ancho, alto y precios para ver los valores por m²</div>') +
+        ) : "") +
+        '<button class="delete-link" data-base-delete="' + b.id + '" style="margin-top:12px;">' +
+          '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path></svg>' +
+          'Eliminar base' +
+        '</button>' +
+      '</div>'
+    ) : "";
+
+    return (
+      '<div class="card product-card" style="margin-bottom:8px;" data-base-card="' + b.id + '">' +
+        '<div class="product-card-inner">' +
+          '<div style="flex:1;">' +
+            '<button class="product-header oswald" data-base-toggle="' + b.id + '">' +
+              '<span class="name">' + esc(b.name) + '</span>' +
+              headerInfo +
+            '</button>' +
+            bodyHTML +
+          '</div>' +
+        '</div>' +
       '</div>'
     );
   }
@@ -957,11 +998,24 @@
       if (!b) return;
       b[field] = field === "name" ? inp.value : num(inp.value);
       // Re-render card to update m² calculations
+      // Re-render whole card to update header and body values
       var cardEl = document.querySelector("[data-base-card=\"" + bid + "\"]");
       if (cardEl) cardEl.outerHTML = baseCardHTML(b);
+      // Restore focus on the same field
+      var newInp = document.querySelector("[data-base-field=\"" + field + "\"][data-base-id=\"" + bid + "\"]");
+      if (newInp) { newInp.focus(); newInp.select && newInp.select(); }
       saveData();
     });
     document.getElementById("basesList").addEventListener("click", function (e) {
+      var toggleBtn = e.target.closest("[data-base-toggle]");
+      if (toggleBtn) {
+        var tid = toggleBtn.getAttribute("data-base-toggle");
+        if (expandedBases.has(tid)) expandedBases.delete(tid); else expandedBases.add(tid);
+        var b = data.bases.find(function (x) { return x.id === tid; });
+        var cardEl = document.querySelector("[data-base-card=\"" + tid + "\"]");
+        if (cardEl && b) cardEl.outerHTML = baseCardHTML(b);
+        return;
+      }
       var delBtn = e.target.closest("[data-base-delete]");
       if (delBtn) {
         var did = delBtn.getAttribute("data-base-delete");
@@ -976,6 +1030,7 @@
       if (!data.bases) data.bases = [];
       var id = "b" + Date.now().toString();
       data.bases.push({ id: id, name: nameEl.value.trim(), ancho: 0, alto: 0, gramaje: "", costoPlancha: 0, ventaPlancha: 0 });
+      expandedBases.add(id);
       nameEl.value = "";
       renderBasesList();
       saveData();
