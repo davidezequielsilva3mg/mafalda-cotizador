@@ -149,6 +149,27 @@
   .final-box .value { font-size:26px; font-weight:700; color:#FF6A2B; font-family:ui-monospace, monospace; }
 
   .empty-hint { font-size:13px; color:#9BA1A4; }
+
+  /* Panel de dos columnas: form izq + resultado der */
+  .panel-2col {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 0;
+    align-items: start;
+    padding: 0 20px;
+    margin-top: 20px;
+  }
+  .panel-2col-left { padding-right: 20px; }
+  .panel-2col-right {
+    position: sticky;
+    top: 20px;
+    padding-left: 20px;
+    border-left: 1px solid #2a2e31;
+  }
+  @media (max-width: 720px) {
+    .panel-2col { grid-template-columns: 1fr; }
+    .panel-2col-right { position:static; border-left:none; padding-left:0; border-top:1px solid #2a2e31; padding-top:16px; margin-top:16px; }
+  }
 </style>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
@@ -186,8 +207,9 @@
     <div class="content">
       <!-- Cotizador -->
       <div class="tab-panel active" data-panel="cotizador">
-        <section>
-          <div class="card" style="padding:16px;">
+        <div class="panel-2col">
+        <div class="panel-2col-left">
+        <div class="card" style="padding:16px;">
             <span class="label">Producto</span>
             <div class="select-wrap" style="margin-bottom:12px;">
               <select id="quoteProduct" class="field oswald" style="text-transform:uppercase;"></select>
@@ -247,19 +269,22 @@
             <span class="label">Cargos de preparación (podés elegir varios)</span>
             <div id="quotePrepList" style="margin-bottom:16px; display:flex; flex-direction:column; gap:6px;"></div>
 
+            </div>
+          </div><!-- end left -->
+          <div class="panel-2col-right">
             <div id="quoteOutput"></div>
-          </div>
-        </section>
+          </div><!-- end right -->
+        </div><!-- end panel-2col -->
       </div>
 
       <!-- Cartelería -->
       <div class="tab-panel" data-panel="carteleria">
-        <section>
-          <div class="section-title">
+        <div class="panel-2col">
+        <div class="panel-2col-left">
+        <div class="section-title" style="margin-top:20px;">
             <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"></rect><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"></path></svg>
             <h2>Cartelería</h2>
           </div>
-
           <div class="card" style="padding:16px; margin-bottom:12px;">
             <!-- Medidas -->
             <span class="label">Medidas del cartel</span>
@@ -309,9 +334,12 @@
             </div>
           </div>
 
-          <!-- Resultado -->
-          <div id="cartOutput"></div>
-        </section>
+        </div><!-- end left -->
+          <div class="panel-2col-right">
+            <!-- Resultado -->
+            <div id="cartOutput"></div>
+          </div><!-- end right -->
+        </div><!-- end panel-2col -->
       </div>
 
       <!-- Productos -->
