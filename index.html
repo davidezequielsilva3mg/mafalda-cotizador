@@ -150,7 +150,6 @@
 
   .empty-hint { font-size:13px; color:#9BA1A4; }
 </style>
-  <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 </head>
@@ -179,6 +178,10 @@
       <button class="tab-btn" data-tab="prep">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
         Preparación
+      </button>
+      <button class="tab-btn" data-tab="bases">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+        Bases
       </button>
     </nav>
 
@@ -327,6 +330,26 @@
           </div>
         </section>
       </div>
+      <!-- Bases -->
+      <div class="tab-panel" data-panel="bases">
+        <section>
+          <div class="section-title">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+            <h2>Bases rígidas</h2>
+          </div>
+          <p style="font-size:12px; color:#9BA1A4; margin:0 0 16px;">
+            Materiales rígidos. Ingresá las dimensiones de la plancha y los precios — el costo y precio por m² se calculan automáticamente.
+          </p>
+          <div id="basesList"></div>
+          <div class="dashed row" style="padding:16px; margin-top:12px; gap:8px; flex-wrap:wrap;">
+            <input id="newBaseName" class="field" placeholder="Tipo de material (ej: Corrugado 3mm)" style="flex:2; min-width:160px;" />
+            <button class="btn-accent" id="addBaseBtn">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+              Agregar base
+            </button>
+          </div>
+        </section>
+      </div>
     </div>
   </div>
 </div>
@@ -337,6 +360,10 @@
 
   var DEFAULT_DATA = {
     ink: { pricePerBottle: 48000, bottleVolumeMl: 1000, bottleCount: 4, yieldMlM2: 16 },
+    bases: [
+      { id: "b1", name: "Corrugado 3mm", ancho: 100, alto: 70, gramaje: "", costoPlancha: 0, ventaPlancha: 0 },
+      { id: "b2", name: "Bicapa 3mm",    ancho: 200, alto: 100, gramaje: "", costoPlancha: 0, ventaPlancha: 0 }
+    ],
     prepCharges: [
       { id: "p0", name: "Archivo listo para imprimir", price: 0 },
       { id: "p1", name: "Acomodar archivo", price: 1000 },
@@ -344,9 +371,9 @@
       { id: "p3", name: "Diseño", price: 3500 }
     ],
     products: [
-      { id: "1", name: "Vinilo", materialCost: 1500, salePriceM2: 3200, minBillableArea: 0, minPrice: 3500, wastePct: 5, rollWidth: 118 },
-      { id: "2", name: "Lona", materialCost: 1200, salePriceM2: 2500, minBillableArea: 0, minPrice: 3000, wastePct: 5, rollWidth: 118 },
-      { id: "3", name: "Microperforado", materialCost: 1800, salePriceM2: 3800, minBillableArea: 0, minPrice: 4000, wastePct: 8, rollWidth: 118 }
+      { id: "1", name: "Vinilo", materialCost: 1500, salePriceM2: 3200, minBillableArea: 0, minPrice: 3500, wastePct: 5, rollWidth: 118, rollPrice: 0, rollLengthM: 0, rollWidthM: 0 },
+      { id: "2", name: "Lona", materialCost: 1200, salePriceM2: 2500, minBillableArea: 0, minPrice: 3000, wastePct: 5, rollWidth: 118, rollPrice: 0, rollLengthM: 0, rollWidthM: 0 },
+      { id: "3", name: "Microperforado", materialCost: 1800, salePriceM2: 3800, minBillableArea: 0, minPrice: 4000, wastePct: 8, rollWidth: 118, rollPrice: 0, rollLengthM: 0, rollWidthM: 0 }
     ]
   };
 
@@ -364,6 +391,15 @@
     if (vol <= 0) return 0;
     var costPerMl = num(data.ink.pricePerBottle) / vol;
     return costPerMl * num(data.ink.yieldMlM2);
+  }
+
+  function rollCostPerM2(p) {
+    var price = num(p.rollPrice);
+    var len   = num(p.rollLengthM);
+    var wid   = num(p.rollWidthM);
+    if (price <= 0 || len <= 0 || wid <= 0) return null;
+    var area = len * wid;
+    return price / area;
   }
 
   var data = JSON.parse(JSON.stringify(DEFAULT_DATA));
@@ -393,7 +429,7 @@
     });
   }
 
-  // ── Firebase config ──────────────────────────────────────────────────────
+  // ── Firebase ──────────────────────────────────────────────────────────────
   var firebaseConfig = {
     apiKey: "AIzaSyCbNFlEVmq5JLEowiX4_dJmco05t-1uRwM",
     authDomain: "mafalda-grafica.firebaseapp.com",
@@ -402,8 +438,6 @@
     messagingSenderId: "1036113368691",
     appId: "1:1036113368691:web:ed09d55b4e2806e5ee7c06"
   };
-
-  // Inicializar Firebase
   var fbApp = firebase.initializeApp(firebaseConfig);
   var db = firebase.firestore(fbApp);
   var DOC_REF = db.collection("cotizadorConfig").doc("data");
@@ -418,7 +452,11 @@
           if (!data.ink) data.ink = JSON.parse(JSON.stringify(DEFAULT_DATA.ink));
           data.products.forEach(function (p) {
             if (p.rollWidth === undefined) p.rollWidth = 118;
+            if (p.rollPrice === undefined) p.rollPrice = 0;
+            if (p.rollLengthM === undefined) p.rollLengthM = 0;
+            if (p.rollWidthM === undefined) p.rollWidthM = 0;
           });
+          if (!data.bases) data.bases = JSON.parse(JSON.stringify(DEFAULT_DATA.bases));
           quote.productId = data.products[0] ? data.products[0].id : "1";
           quote.prepIds = [];
         }
@@ -428,7 +466,6 @@
     }
   }
 
-  // Debounce para no escribir en Firebase en cada tecla
   var saveTimer = null;
   async function saveData() {
     clearTimeout(saveTimer);
@@ -490,6 +527,66 @@
     }).join("");
   }
 
+  // ---------- render: bases ----------
+  function baseCostoM2(b) {
+    var a = num(b.ancho) / 100;
+    var h = num(b.alto) / 100;
+    var area = a * h;
+    if (area <= 0) return { area: 0, costoM2: 0, ventaM2: 0 };
+    return {
+      area: area,
+      costoM2: num(b.costoPlancha) / area,
+      ventaM2: num(b.ventaPlancha) / area
+    };
+  }
+
+  function baseCardHTML(b) {
+    var calc = baseCostoM2(b);
+    return (
+      '<div class="card" style="margin-bottom:10px;" data-base-card="' + b.id + '">' +
+        '<div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">' +
+          '<input class="field pname" style="font-weight:700; font-size:15px; flex:1; margin-right:8px;" data-base-field="name" data-base-id="' + b.id + '" value="' + esc(b.name) + '" />' +
+          '<button class="btn-icon" data-base-delete="' + b.id + '">' +
+            '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path></svg>' +
+          '</button>' +
+        '</div>' +
+        '<div class="grid2" style="margin-bottom:10px;">' +
+          '<div><span class="label">Ancho plancha (cm)</span>' +
+            '<input type="number" inputmode="decimal" class="field mono" data-base-field="ancho" data-base-id="' + b.id + '" value="' + (b.ancho||"") + '" placeholder="100" /></div>' +
+          '<div><span class="label">Alto plancha (cm)</span>' +
+            '<input type="number" inputmode="decimal" class="field mono" data-base-field="alto" data-base-id="' + b.id + '" value="' + (b.alto||"") + '" placeholder="70" /></div>' +
+          '<div><span class="label">Gramaje (g/m²) <span style="font-size:10px;color:#555;">(opcional)</span></span>' +
+            '<input type="number" inputmode="decimal" class="field mono" data-base-field="gramaje" data-base-id="' + b.id + '" value="' + (b.gramaje||"") + '" placeholder="—" /></div>' +
+          '<div><span class="label">Área plancha</span>' +
+            '<div class="field mono" style="background:#1a1e21; display:flex; align-items:center; color:#9BA1A4;">' + fmt(calc.area) + ' m²</div></div>' +
+          '<div><span class="label">Costo por plancha ($)</span>' +
+            '<input type="number" inputmode="decimal" class="field mono" data-base-field="costoPlancha" data-base-id="' + b.id + '" value="' + (b.costoPlancha||"") + '" placeholder="0" /></div>' +
+          '<div><span class="label">Precio venta por plancha ($)</span>' +
+            '<input type="number" inputmode="decimal" class="field mono" data-base-field="ventaPlancha" data-base-id="' + b.id + '" value="' + (b.ventaPlancha||"") + '" placeholder="0" /></div>' +
+        '</div>' +
+        (calc.area > 0 ? (
+          '<div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">' +
+            '<div class="final-box" style="margin:0;">' +
+              '<span class="label2">Costo / m²</span>' +
+              '<span class="value" style="color:#F5C24B;">$' + fmt(calc.costoM2) + '</span>' +
+            '</div>' +
+            '<div class="final-box" style="margin:0;">' +
+              '<span class="label2">Precio venta / m²</span>' +
+              '<span class="value" style="color:#4ADE80;">$' + fmt(calc.ventaM2) + '</span>' +
+            '</div>' +
+          '</div>'
+        ) : '<div style="font-size:12px; color:#555; text-align:center; padding:8px 0;">Completá ancho, alto y precios para ver los valores por m²</div>') +
+      '</div>'
+    );
+  }
+
+  function renderBasesList() {
+    var el = document.getElementById("basesList");
+    if (!el) return;
+    if (!data.bases) data.bases = [];
+    el.innerHTML = data.bases.map(baseCardHTML).join("");
+  }
+
   // ---------- render: productos ----------
   function productCardHTML(p) {
     var wasteFactor = 1 + num(p.wastePct) / 100;
@@ -499,15 +596,52 @@
     var margin = price > 0 ? ((price - baseCostM2) / price) * 100 : 0;
     var isOpen = expanded.has(p.id);
 
+    var rollCost = rollCostPerM2(p);
     var fieldsHTML = FIELD_META.map(function (fm) {
       var field = fm[0], label = fm[1];
+      // materialCost shows calculated value if roll data is set
+      var extra = field === "materialCost" && rollCost !== null
+        ? '<span class="note-tag" style="margin-left:4px;">AUTO</span>'
+        : "";
       return (
         '<div>' +
-          '<span class="label">' + label + '</span>' +
+          '<span class="label">' + label + extra + '</span>' +
           '<input type="number" inputmode="decimal" class="field mono" data-product-field="' + field + '" data-product-id="' + p.id + '" value="' + p[field] + '" />' +
         '</div>'
       );
     }).join("");
+
+    // Roll calculator HTML
+    var rollAreaM2 = num(p.rollLengthM) * num(p.rollWidthM);
+    var rollCalcHTML = (
+      '<div style="background:#1a1e21;border-radius:8px;padding:12px;margin-bottom:10px;">' +
+        '<div style="font-size:11px;font-weight:700;color:#9BA1A4;text-transform:uppercase;letter-spacing:.7px;margin-bottom:10px;">📦 Calcular costo desde rollo</div>' +
+        '<div class="grid2" style="margin-bottom:8px;">' +
+          '<div>' +
+            '<span class="label">Precio del rollo ($)</span>' +
+            '<input type="number" inputmode="decimal" class="field mono" data-product-field="rollPrice" data-product-id="' + p.id + '" value="' + (p.rollPrice||"") + '" placeholder="0" />' +
+          '</div>' +
+          '<div>' +
+            '<span class="label">Largo del rollo (m)</span>' +
+            '<input type="number" inputmode="decimal" class="field mono" data-product-field="rollLengthM" data-product-id="' + p.id + '" value="' + (p.rollLengthM||"") + '" placeholder="0" />' +
+          '</div>' +
+          '<div>' +
+            '<span class="label">Ancho del rollo (m)</span>' +
+            '<input type="number" inputmode="decimal" class="field mono" data-product-field="rollWidthM" data-product-id="' + p.id + '" value="' + (p.rollWidthM||"") + '" placeholder="0" />' +
+          '</div>' +
+          '<div style="display:flex;flex-direction:column;justify-content:flex-end;">' +
+            (rollCost !== null
+              ? '<div style="background:#222629;border-radius:6px;padding:8px 10px;">' +
+                  '<div style="font-size:10px;color:#9BA1A4;margin-bottom:2px;">Área: ' + fmt(rollAreaM2) + ' m²</div>' +
+                  '<div style="font-size:15px;font-weight:700;color:#4ADE80;">$' + fmt(rollCost) + '/m²</div>' +
+                  '<div style="font-size:10px;color:#4ADE80;">→ aplicado a Costo material</div>' +
+                '</div>'
+              : '<div style="font-size:11px;color:#9BA1A4;padding:8px 0;">Completá precio, largo y ancho</div>'
+            ) +
+          '</div>' +
+        '</div>' +
+      '</div>'
+    );
 
     return (
       '<div class="card product-card" data-product-card="' + p.id + '">' +
@@ -526,7 +660,7 @@
             '</button>' +
             '<div class="product-body' + (isOpen ? ' open' : '') + '">' +
               '<input class="field pname" data-product-field="name" data-product-id="' + p.id + '" value="' + esc(p.name) + '" />' +
-              '<div class="grid2">' + fieldsHTML + '</div>' +
+              rollCalcHTML + '<div class="grid2">' + fieldsHTML + '</div>' +
               '<div class="quote-out-row" style="margin-top:10px; padding-top:10px; border-top:1px solid #2a2e31;">' +
                 '<span class="l">Costo tinta / m² <span class="note-tag">DESDE TINTAS</span></span>' +
                 '<span class="v">$' + fmt(inkM2) + '</span>' +
@@ -790,6 +924,40 @@
         saveData();
       }
     });
+    // bases
+    document.getElementById("basesList").addEventListener("input", function (e) {
+      var inp = e.target.closest("[data-base-field]");
+      if (!inp) return;
+      var bid = inp.getAttribute("data-base-id");
+      var field = inp.getAttribute("data-base-field");
+      var b = data.bases.find(function (x) { return x.id === bid; });
+      if (!b) return;
+      b[field] = field === "name" ? inp.value : num(inp.value);
+      // Re-render card to update m² calculations
+      var cardEl = document.querySelector("[data-base-card=\"" + bid + "\"]");
+      if (cardEl) cardEl.outerHTML = baseCardHTML(b);
+      saveData();
+    });
+    document.getElementById("basesList").addEventListener("click", function (e) {
+      var delBtn = e.target.closest("[data-base-delete]");
+      if (delBtn) {
+        var did = delBtn.getAttribute("data-base-delete");
+        data.bases = data.bases.filter(function (b) { return b.id !== did; });
+        renderBasesList();
+        saveData();
+      }
+    });
+    document.getElementById("addBaseBtn").addEventListener("click", function () {
+      var nameEl = document.getElementById("newBaseName");
+      if (!nameEl.value.trim()) return;
+      if (!data.bases) data.bases = [];
+      var id = "b" + Date.now().toString();
+      data.bases.push({ id: id, name: nameEl.value.trim(), ancho: 0, alto: 0, gramaje: "", costoPlancha: 0, ventaPlancha: 0 });
+      nameEl.value = "";
+      renderBasesList();
+      saveData();
+    });
+
     document.getElementById("addProductBtn").addEventListener("click", function () {
       var nameEl = document.getElementById("newProductName");
       if (!nameEl.value.trim()) return;
@@ -898,6 +1066,7 @@
     renderInkTab();
     renderPrepRows();
     renderProductsList();
+    renderBasesList();
     renderQuoteProductOptions();
     renderQuotePrepChecklist();
     renderUnitButtons();
