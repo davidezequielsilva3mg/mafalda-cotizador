@@ -378,12 +378,10 @@
   };
 
   var FIELD_META = [
-    ["materialCost", "Costo material / m²"],
     ["salePriceM2", "Precio venta / m²"],
     ["wastePct", "Desperdicio (%)"],
     ["minBillableArea", "Superficie mín. facturable (m²)"],
-    ["minPrice", "Precio mínimo de trabajo"],
-    ["rollWidth", "Ancho de rollo (cm)"]
+    ["minPrice", "Precio mínimo de trabajo"]
   ];
 
   function inkCostPerM2() {
@@ -600,12 +598,26 @@
     var fieldsHTML = FIELD_META.map(function (fm) {
       var field = fm[0], label = fm[1];
       // materialCost shows calculated value if roll data is set
-      var extra = field === "materialCost" && rollCost !== null
-        ? '<span class="note-tag" style="margin-left:4px;">AUTO</span>'
-        : "";
+      if (field === "materialCost") {
+        // Si hay datos de rollo, mostrar como calculado automáticamente
+        if (rollCost !== null) {
+          return (
+            '<div>' +
+              '<span class="label">Costo material / m² <span class="note-tag" style="margin-left:4px; background:#4ADE8033; color:#4ADE80; border:1px solid #4ADE8066;">✓ AUTO</span></span>' +
+              '<div class="field mono" style="background:#1a2520; color:#4ADE80; display:flex; align-items:center; border-color:#4ADE8033;">$' + fmt(rollCost) + '</div>' +
+            '</div>'
+          );
+        }
+        return (
+          '<div>' +
+            '<span class="label">Costo material / m² <span style="font-size:10px; color:#555; margin-left:4px;">(o completá el rollo arriba)</span></span>' +
+            '<input type="number" inputmode="decimal" class="field mono" data-product-field="' + field + '" data-product-id="' + p.id + '" value="' + p[field] + '" />' +
+          '</div>'
+        );
+      }
       return (
         '<div>' +
-          '<span class="label">' + label + extra + '</span>' +
+          '<span class="label">' + label + '</span>' +
           '<input type="number" inputmode="decimal" class="field mono" data-product-field="' + field + '" data-product-id="' + p.id + '" value="' + p[field] + '" />' +
         '</div>'
       );
@@ -636,7 +648,7 @@
                   '<div style="font-size:15px;font-weight:700;color:#4ADE80;">$' + fmt(rollCost) + '/m²</div>' +
                   '<div style="font-size:10px;color:#4ADE80;">→ aplicado a Costo material</div>' +
                 '</div>'
-              : '<div style="font-size:11px;color:#9BA1A4;padding:8px 0;">Completá precio, largo y ancho</div>'
+              : '<div style="font-size:11px;color:#9BA1A4;padding:8px 0;">Completá precio, largo y ancho para calcular automáticamente</div>'
             ) +
           '</div>' +
         '</div>' +
@@ -898,8 +910,19 @@
       var item = data.products.find(function (p) { return p.id === id; });
       if (!item) return;
       item[field] = field === "name" ? t.value : num(t.value);
-      if (field !== "name") {
-        // actualizar solo el margen mostrado en el header sin perder foco
+      // Si cambia algún campo del rollo, recalcular materialCost y rollWidth automáticamente
+      if (field === "rollPrice" || field === "rollLengthM" || field === "rollWidthM") {
+        var rc = rollCostPerM2(item);
+        if (rc !== null) {
+          item.materialCost = Math.round(rc);
+        }
+        // Sync rollWidth (en cm) desde rollWidthM (en m) para que el cotizador lo use
+        if (item.rollWidthM > 0) {
+          item.rollWidth = item.rollWidthM * 100;
+        }
+        // Re-render el card completo para mostrar los nuevos valores calculados
+        refreshProductCard(id);
+      } else if (field !== "name") {
         updateProductHeaderBadge(id);
       }
       renderQuoteProductOptions();
