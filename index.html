@@ -259,10 +259,58 @@
             <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"></rect><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"></path></svg>
             <h2>Cartelería</h2>
           </div>
-          <div style="text-align:center; padding:48px 24px; color:#555;">
-            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#444" stroke-width="1.5" style="margin-bottom:16px;"><rect x="2" y="7" width="20" height="14" rx="2"></rect><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"></path></svg>
-            <p style="font-size:14px; color:#666;">Próximamente</p>
+
+          <div class="card" style="padding:16px; margin-bottom:12px;">
+            <!-- Medidas -->
+            <span class="label">Medidas del cartel</span>
+            <div class="grid2" style="margin-bottom:8px;">
+              <div>
+                <span class="label">Ancho</span>
+                <input id="cartWidth" type="number" inputmode="decimal" class="field mono" placeholder="0" />
+              </div>
+              <div>
+                <span class="label">Alto</span>
+                <input id="cartHeight" type="number" inputmode="decimal" class="field mono" placeholder="0" />
+              </div>
+            </div>
+            <div class="row" style="margin-bottom:16px;">
+              <button class="unit-btn mono active" data-cart-unit="cm" id="cartUnitCm">cm</button>
+              <button class="unit-btn mono" data-cart-unit="m" id="cartUnitM">m</button>
+            </div>
+            <div id="cartAreaRow" style="display:none; margin-bottom:12px;">
+              <div class="quote-out-row">
+                <span class="l">Superficie</span>
+                <span class="v mono" id="cartAreaOut">0 m²</span>
+              </div>
+            </div>
+
+            <!-- Material -->
+            <span class="label">Material (vinilo, lona, etc.)</span>
+            <div class="select-wrap" style="margin-bottom:12px;">
+              <select id="cartMaterial" class="field oswald" style="text-transform:uppercase;"></select>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </div>
+
+            <!-- Base -->
+            <span class="label">Base rígida</span>
+            <div class="select-wrap" style="margin-bottom:16px;">
+              <select id="cartBase" class="field oswald" style="text-transform:uppercase;"></select>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </div>
+
+            <!-- Preparaciones -->
+            <span class="label">Preparación (podés elegir varios)</span>
+            <div id="cartPrepList" style="margin-bottom:16px; display:flex; flex-direction:column; gap:6px;"></div>
+
+            <!-- Mínimo -->
+            <div class="row" style="align-items:center; margin-bottom:4px;">
+              <span class="label" style="margin:0; flex:1;">Precio mínimo de trabajo</span>
+              <input id="cartMinPrice" type="number" inputmode="decimal" class="field mono" placeholder="0" style="width:120px;" />
+            </div>
           </div>
+
+          <!-- Resultado -->
+          <div id="cartOutput"></div>
         </section>
       </div>
 
@@ -1139,6 +1187,131 @@
     }
   }
 
+  // ── CARTELERÍA ─────────────────────────────────────────────────────────
+  var cart = {
+    unit: "cm", width: "", height: "",
+    materialId: "", baseId: "", prepIds: [], minPrice: 0
+  };
+
+  function cartAreaM2() {
+    var w = num(cart.width), h = num(cart.height);
+    var wm = cart.unit === "cm" ? w/100 : w;
+    var hm = cart.unit === "cm" ? h/100 : h;
+    return wm * hm;
+  }
+
+  function renderCartSelects() {
+    var matSel = document.getElementById("cartMaterial");
+    if (!matSel) return;
+    matSel.innerHTML = data.products.map(function(p) {
+      return '<option value="' + p.id + '">' + esc(p.name) + '</option>';
+    }).join("");
+    if (!cart.materialId && data.products[0]) cart.materialId = data.products[0].id;
+    matSel.value = cart.materialId;
+
+    var baseSel = document.getElementById("cartBase");
+    var bases = data.bases || [];
+    baseSel.innerHTML = '<option value="">— Sin base —</option>' + bases.map(function(b) {
+      return '<option value="' + b.id + '">' + esc(b.name) + '</option>';
+    }).join("");
+    baseSel.value = cart.baseId;
+  }
+
+  function renderCartPrepList() {
+    var el = document.getElementById("cartPrepList");
+    if (!el) return;
+    cart.prepIds = cart.prepIds.filter(function(id) {
+      return data.prepCharges.some(function(p) { return p.id === id; });
+    });
+    el.innerHTML = data.prepCharges.map(function(p) {
+      var checked = cart.prepIds.indexOf(p.id) !== -1;
+      return (
+        '<label class="card prep-check-row">' +
+          '<input type="checkbox" data-cart-prep="' + p.id + '"' + (checked ? " checked" : "") + ' />' +
+          '<span class="pname">' + esc(p.name) + '</span>' +
+          '<span class="pprice mono">$' + fmt(p.price) + '/m²</span>' +
+        '</label>'
+      );
+    }).join("");
+  }
+
+  function renderCartOutput() {
+    var out = document.getElementById("cartOutput");
+    if (!out) return;
+    var m2 = cartAreaM2();
+    var areaRow = document.getElementById("cartAreaRow");
+    var areaOut = document.getElementById("cartAreaOut");
+    if (areaRow) areaRow.style.display = m2 > 0 ? "block" : "none";
+    if (areaOut) areaOut.textContent = fmt(m2) + " m²";
+    if (m2 <= 0) { out.innerHTML = ""; return; }
+
+    var mat      = data.products.find(function(p) { return p.id === cart.materialId; });
+    var matCosto = mat ? num(mat.materialCost) : 0;
+    var matVenta = mat ? num(mat.salePriceM2)  : 0;
+
+    var base      = (data.bases||[]).find(function(b) { return b.id === cart.baseId; });
+    var baseCalc  = base ? baseCostoM2(base) : null;
+    var baseCosto = baseCalc ? baseCalc.costoM2 : 0;
+    var baseVenta = baseCalc ? baseCalc.ventaM2 : 0;
+
+    var selPreps  = data.prepCharges.filter(function(p) { return cart.prepIds.indexOf(p.id) !== -1; });
+    var prepTotal = selPreps.reduce(function(s,p) { return s + num(p.price); }, 0);
+
+    var costoM2   = matCosto + baseCosto + prepTotal;
+    var ventaM2   = matVenta + baseVenta + prepTotal;
+    var costoTotal= costoM2 * m2;
+    var ventaRaw  = ventaM2 * m2;
+    var ventaTotal= Math.max(ventaRaw, num(cart.minPrice));
+    var margen    = ventaTotal > 0 ? ((ventaTotal - costoTotal) / ventaTotal) * 100 : 0;
+    var mColor    = margen >= 30 ? "#4ADE80" : margen >= 15 ? "#F5C24B" : "#F87171";
+    var minAplied = num(cart.minPrice) > 0 && ventaRaw < num(cart.minPrice);
+
+    function row(l, v) { return '<div class="quote-out-row"><span class="l">' + l + '</span><span class="v">' + v + '</span></div>'; }
+
+    var html = '<div class="card" style="padding:16px;">';
+    html += '<div style="font-size:11px;font-weight:700;color:#9BA1A4;text-transform:uppercase;letter-spacing:.7px;margin-bottom:10px;">Desglose</div>';
+    if (mat)  html += row(esc(mat.name) + ' — material', '$' + fmt(matCosto*m2) + ' costo · $' + fmt(matVenta*m2) + ' venta');
+    if (base) html += row(esc(base.name) + ' — base',    '$' + fmt(baseCosto*m2) + ' costo · $' + fmt(baseVenta*m2) + ' venta');
+    selPreps.forEach(function(p) { html += row(esc(p.name), '$' + fmt(num(p.price)*m2)); });
+
+    html += '<div style="border-top:1px solid #2a2e31;margin:10px 0;"></div>';
+    html += row('Costo total', '<strong>$' + fmt(costoTotal) + '</strong>');
+    html += row('Precio venta' + (minAplied ? ' <span class="note-tag">MÍNIMO</span>' : ''), '<strong style="color:#4ADE80;">$' + fmt(ventaTotal) + '</strong>');
+    html += '<div class="final-box" style="margin-top:12px;">';
+    html += '<span class="label2">Margen</span>';
+    html += '<span class="value" style="color:' + mColor + ';">' + (margen >= 0 ? "+" : "") + fmt(margen) + '%</span>';
+    html += '</div></div>';
+    out.innerHTML = html;
+  }
+
+  function attachCartListeners() {
+    var cw = document.getElementById("cartWidth");
+    var ch = document.getElementById("cartHeight");
+    if (!cw) return;
+    cw.addEventListener("input", function(e) { cart.width  = e.target.value; renderCartOutput(); });
+    ch.addEventListener("input", function(e) { cart.height = e.target.value; renderCartOutput(); });
+    document.querySelectorAll("[data-cart-unit]").forEach(function(btn) {
+      btn.addEventListener("click", function() {
+        cart.unit = this.getAttribute("data-cart-unit");
+        document.getElementById("cartUnitCm").classList.toggle("active", cart.unit==="cm");
+        document.getElementById("cartUnitM").classList.toggle("active",  cart.unit==="m");
+        renderCartOutput();
+      });
+    });
+    document.getElementById("cartMaterial").addEventListener("change", function(e) { cart.materialId = e.target.value; renderCartOutput(); });
+    document.getElementById("cartBase").addEventListener("change",     function(e) { cart.baseId     = e.target.value; renderCartOutput(); });
+    document.getElementById("cartMinPrice").addEventListener("input",  function(e) { cart.minPrice   = num(e.target.value); renderCartOutput(); });
+    document.getElementById("cartPrepList").addEventListener("change", function(e) {
+      var t = e.target.closest("[data-cart-prep]");
+      if (!t) return;
+      var id = t.getAttribute("data-cart-prep");
+      var idx = cart.prepIds.indexOf(id);
+      if (t.checked && idx === -1) cart.prepIds.push(id);
+      if (!t.checked && idx !== -1) cart.prepIds.splice(idx, 1);
+      renderCartOutput();
+    });
+  }
+
   async function init() {
     await loadData();
     renderInkTab();
@@ -1147,11 +1320,14 @@
     renderBasesList();
     renderQuoteProductOptions();
     renderQuotePrepChecklist();
+    renderCartSelects();
+    renderCartPrepList();
     renderUnitButtons();
     renderModeButtons();
     renderMatrixRollNote();
     renderQuoteOutput();
     attachListeners();
+    attachCartListeners();
   }
 
   init();
