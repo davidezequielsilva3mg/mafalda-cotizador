@@ -635,12 +635,12 @@
 
     // Header: nombre + m² costo y venta + chevron
     var headerInfo = calc.area > 0
-      ? '<span class="row" style="gap:8px;">' +
+      ? '<span class="row base-header-info" style="gap:8px;">' +
           '<span class="mono" style="font-size:12px; color:#F5C24B;">$' + fmt(calc.costoM2) + '/m² costo</span>' +
           '<span class="mono" style="font-size:12px; color:#4ADE80;">$' + fmt(calc.ventaM2) + '/m² venta</span>' +
           (isOpen ? chevronUp : chevronDown) +
         '</span>'
-      : '<span class="row" style="gap:8px;">' +
+      : '<span class="row base-header-info" style="gap:8px;">' +
           '<span style="font-size:11px; color:#555;">sin datos</span>' +
           (isOpen ? chevronUp : chevronDown) +
         '</span>';
@@ -649,20 +649,20 @@
       '<div class="product-body open" style="padding-top:12px;">' +
         '<div class="grid2" style="margin-bottom:10px;">' +
           '<div><span class="label">Ancho plancha (cm)</span>' +
-            '<input type="number" inputmode="decimal" class="field mono" data-base-field="ancho" data-base-id="' + b.id + '" value="' + (b.ancho||"") + '" placeholder="100" /></div>' +
+            '<input type="number" inputmode="decimal" step="0.01" class="field mono" data-base-field="ancho" data-base-id="' + b.id + '" value="' + (b.ancho||"") + '" placeholder="100" /></div>' +
           '<div><span class="label">Alto plancha (cm)</span>' +
-            '<input type="number" inputmode="decimal" class="field mono" data-base-field="alto" data-base-id="' + b.id + '" value="' + (b.alto||"") + '" placeholder="70" /></div>' +
+            '<input type="number" inputmode="decimal" step="0.01" class="field mono" data-base-field="alto" data-base-id="' + b.id + '" value="' + (b.alto||"") + '" placeholder="70" /></div>' +
           '<div><span class="label">Gramaje (g/m²) <span style="font-size:10px;color:#555;">(opcional)</span></span>' +
             '<input type="number" inputmode="decimal" class="field mono" data-base-field="gramaje" data-base-id="' + b.id + '" value="' + (b.gramaje||"") + '" placeholder="—" /></div>' +
           '<div><span class="label">Área plancha</span>' +
-            '<div class="field mono" style="background:#1a1e21; display:flex; align-items:center; color:#9BA1A4;">' + fmt(calc.area) + ' m²</div></div>' +
+            '<div class="field mono base-area-display" style="background:#1a1e21; display:flex; align-items:center; color:#9BA1A4;">' + fmt(calc.area) + ' m²</div></div>' +
           '<div><span class="label">Costo por plancha ($)</span>' +
             '<input type="number" inputmode="decimal" class="field mono" data-base-field="costoPlancha" data-base-id="' + b.id + '" value="' + (b.costoPlancha||"") + '" placeholder="0" /></div>' +
           '<div><span class="label">Precio venta por plancha ($)</span>' +
             '<input type="number" inputmode="decimal" class="field mono" data-base-field="ventaPlancha" data-base-id="' + b.id + '" value="' + (b.ventaPlancha||"") + '" placeholder="0" /></div>' +
         '</div>' +
-        (calc.area > 0 ? (
-          '<div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:4px;">' +
+        '<div class="base-result-display" style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:4px;">' +
+          (calc.area > 0 ? (
             '<div class="final-box" style="margin:0;">' +
               '<span class="label2">Costo / m²</span>' +
               '<span class="value" style="color:#F5C24B;">$' + fmt(calc.costoM2) + '</span>' +
@@ -670,9 +670,9 @@
             '<div class="final-box" style="margin:0;">' +
               '<span class="label2">Precio venta / m²</span>' +
               '<span class="value" style="color:#4ADE80;">$' + fmt(calc.ventaM2) + '</span>' +
-            '</div>' +
-          '</div>'
-        ) : "") +
+            '</div>'
+          ) : "") +
+        '</div>' +
         '<button class="delete-link" data-base-delete="' + b.id + '" style="margin-top:12px;">' +
           '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path></svg>' +
           'Eliminar base' +
@@ -1090,13 +1090,42 @@
       var b = data.bases.find(function (x) { return x.id === bid; });
       if (!b) return;
       b[field] = field === "name" ? inp.value : num(inp.value);
-      // Re-render card to update m² calculations
-      // Re-render whole card to update header and body values
+      // Solo actualizar el display del resultado sin re-renderizar el card
+      var calc = baseCostoM2(b);
       var cardEl = document.querySelector("[data-base-card=\"" + bid + "\"]");
-      if (cardEl) cardEl.outerHTML = baseCardHTML(b);
-      // Restore focus on the same field
-      var newInp = document.querySelector("[data-base-field=\"" + field + "\"][data-base-id=\"" + bid + "\"]");
-      if (newInp) { newInp.focus(); newInp.select && newInp.select(); }
+      if (cardEl) {
+        // Actualizar área
+        var areaEl = cardEl.querySelector(".base-area-display");
+        if (areaEl) areaEl.textContent = fmt(calc.area) + " m²";
+        // Actualizar resultado m²
+        var resEl = cardEl.querySelector(".base-result-display");
+        if (resEl) {
+          if (calc.area > 0) {
+            resEl.innerHTML =
+              '<div class="final-box" style="margin:0;">' +
+                '<span class="label2">Costo / m²</span>' +
+                '<span class="value" style="color:#F5C24B;">$' + fmt(calc.costoM2) + '</span>' +
+              '</div>' +
+              '<div class="final-box" style="margin:0; margin-top:8px;">' +
+                '<span class="label2">Precio venta / m²</span>' +
+                '<span class="value" style="color:#4ADE80;">$' + fmt(calc.ventaM2) + '</span>' +
+              '</div>';
+          } else {
+            resEl.innerHTML = "";
+          }
+        }
+        // Actualizar header (chevron info)
+        var headerInfo = cardEl.querySelector(".base-header-info");
+        if (headerInfo) {
+          if (calc.area > 0) {
+            headerInfo.innerHTML =
+              '<span class="mono" style="font-size:12px; color:#F5C24B;">$' + fmt(calc.costoM2) + '/m² costo</span>' +
+              '<span class="mono" style="font-size:12px; color:#4ADE80;">$' + fmt(calc.ventaM2) + '/m² venta</span>';
+          } else {
+            headerInfo.innerHTML = '<span style="font-size:11px; color:#555;">sin datos</span>';
+          }
+        }
+      }
       saveData();
     });
     document.getElementById("basesList").addEventListener("click", function (e) {
