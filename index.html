@@ -752,11 +752,11 @@
           '</div>' +
           '<div>' +
             '<span class="label">Largo del rollo (m)</span>' +
-            '<input type="number" inputmode="decimal" class="field mono" data-product-field="rollLengthM" data-product-id="' + p.id + '" value="' + (p.rollLengthM||"") + '" placeholder="0" />' +
+            '<input type="number" inputmode="decimal" step="0.01" class="field mono" data-product-field="rollLengthM" data-product-id="' + p.id + '" value="' + (p.rollLengthM||"") + '" placeholder="0" />' +
           '</div>' +
           '<div>' +
             '<span class="label">Ancho del rollo (m)</span>' +
-            '<input type="number" inputmode="decimal" class="field mono" data-product-field="rollWidthM" data-product-id="' + p.id + '" value="' + (p.rollWidthM||"") + '" placeholder="0" />' +
+            '<input type="number" inputmode="decimal" step="0.01" class="field mono" data-product-field="rollWidthM" data-product-id="' + p.id + '" value="' + (p.rollWidthM||"") + '" placeholder="0" />' +
           '</div>' +
           '<div style="display:flex;flex-direction:column;justify-content:flex-end;">' +
             (rollCost !== null
