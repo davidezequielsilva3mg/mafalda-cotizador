@@ -178,13 +178,21 @@
 <div id="app">
   <div class="layout">
     <nav class="sidebar">
-      <button class="tab-btn active" data-tab="cotizador">
+      <button class="tab-btn active" data-tab="impresos">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"></rect><line x1="8" y1="6" x2="16" y2="6"></line><line x1="8" y1="10" x2="8" y2="10"></line><line x1="12" y1="10" x2="12" y2="10"></line><line x1="16" y1="10" x2="16" y2="10"></line><line x1="8" y1="14" x2="8" y2="14"></line><line x1="12" y1="14" x2="12" y2="14"></line><line x1="16" y1="14" x2="16" y2="14"></line><line x1="8" y1="18" x2="8" y2="18"></line><line x1="12" y1="18" x2="12" y2="18"></line></svg>
-        Cotizador
+        Impresos
       </button>
       <button class="tab-btn" data-tab="carteleria">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"></rect><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"></path></svg>
         Cartelería
+      </button>
+      <button class="tab-btn" data-tab="rotulados">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
+        Rotulados
+      </button>
+      <button class="tab-btn" data-tab="polyfan">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"></rect><path d="M3 9h18M3 15h18"></path></svg>
+        Polyfan
       </button>
       <button class="tab-btn" data-tab="productos">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
@@ -206,7 +214,7 @@
 
     <div class="content">
       <!-- Cotizador -->
-      <div class="tab-panel active" data-panel="cotizador">
+      <div class="tab-panel active" data-panel="impresos">
         <div class="panel-2col">
         <div class="panel-2col-left">
         <div class="card" style="padding:16px;">
@@ -342,6 +350,102 @@
         </div><!-- end panel-2col -->
       </div>
 
+      <!-- Rotulados -->
+      <div class="tab-panel" data-panel="rotulados">
+        <div class="panel-2col">
+        <div class="panel-2col-left">
+
+          <!-- Vinilos de rotulado -->
+          <div class="section-title" style="margin-top:20px;">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
+            <h2>Rotulados</h2>
+          </div>
+
+          <!-- Vinilos -->
+          <div class="card" style="padding:14px; margin-bottom:10px;">
+            <div style="font-size:11px;font-weight:700;color:#9BA1A4;text-transform:uppercase;letter-spacing:.7px;margin-bottom:10px;">Vinilos de rotulado <span style="color:#555;font-weight:400;">(ancho fijo: 60 cm)</span></div>
+            <div id="rotVinilosList"></div>
+            <div class="dashed row" style="padding:10px; margin-top:8px; gap:8px;">
+              <input id="newRotVinilo" class="field" placeholder="Nombre del vinilo (ej: Vinilo blanco brillante)" style="flex:2;" />
+              <button class="btn-accent" id="addRotViniloBtn">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                Agregar
+              </button>
+            </div>
+          </div>
+
+          <!-- Posicionador -->
+          <div class="card" style="padding:14px; margin-bottom:10px;">
+            <div style="font-size:11px;font-weight:700;color:#9BA1A4;text-transform:uppercase;letter-spacing:.7px;margin-bottom:10px;">Posicionador <span style="color:#555;font-weight:400;">(30 cm × 40 m fijo)</span></div>
+            <div class="grid2">
+              <div>
+                <span class="label">Precio del rollo ($)</span>
+                <input id="rotPosicionadorPrecio" type="number" inputmode="decimal" class="field mono" placeholder="0" />
+              </div>
+              <div>
+                <span class="label">Costo / m²</span>
+                <div id="rotPosicionadorM2" class="field mono" style="background:#1a1e21; color:#9BA1A4; display:flex; align-items:center;">—</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Calculadora de cotización -->
+          <div class="card" style="padding:14px; margin-bottom:10px;">
+            <div style="font-size:11px;font-weight:700;color:#9BA1A4;text-transform:uppercase;letter-spacing:.7px;margin-bottom:12px;">Cotizar trabajo</div>
+
+            <span class="label">Vinilo</span>
+            <div class="select-wrap" style="margin-bottom:12px;">
+              <select id="rotViniloSel" class="field oswald" style="text-transform:uppercase;"></select>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </div>
+
+            <div class="grid2" style="margin-bottom:12px;">
+              <div>
+                <span class="label">Ancho (cm)</span>
+                <input id="rotAncho" type="number" inputmode="decimal" step="0.1" class="field mono" placeholder="0" />
+              </div>
+              <div>
+                <span class="label">Alto (cm)</span>
+                <input id="rotAlto" type="number" inputmode="decimal" step="0.1" class="field mono" placeholder="0" />
+              </div>
+            </div>
+
+            <span class="label">Complejidad</span>
+            <div class="row" style="margin-bottom:12px; gap:6px;">
+              <button class="unit-btn rot-comp active" data-rot-comp="baja"  style="flex:1; text-transform:none;">Baja</button>
+              <button class="unit-btn rot-comp"        data-rot-comp="media" style="flex:1; text-transform:none;">Media</button>
+              <button class="unit-btn rot-comp"        data-rot-comp="alta"  style="flex:1; text-transform:none;">Alta</button>
+            </div>
+
+            <span class="label">Tiempo</span>
+            <div class="row" style="margin-bottom:4px; gap:6px;">
+              <button class="unit-btn rot-tiempo active" data-rot-tiempo="rapido" style="flex:1; text-transform:none;">Rápido</button>
+              <button class="unit-btn rot-tiempo"        data-rot-tiempo="medio"  style="flex:1; text-transform:none;">Medio</button>
+              <button class="unit-btn rot-tiempo"        data-rot-tiempo="lento"  style="flex:1; text-transform:none;">Lento</button>
+            </div>
+          </div>
+
+        </div><!-- end left -->
+        <div class="panel-2col-right">
+          <div id="rotOutput"></div>
+        </div><!-- end right -->
+        </div><!-- end panel-2col -->
+      </div>
+
+      <!-- Polyfan -->
+      <div class="tab-panel" data-panel="polyfan">
+        <section>
+          <div class="section-title">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"></rect><path d="M3 9h18M3 15h18"></path></svg>
+            <h2>Polyfan</h2>
+          </div>
+          <div style="text-align:center; padding:48px 24px;">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#444" stroke-width="1.5" style="margin-bottom:16px;"><rect x="3" y="3" width="18" height="18" rx="2"></rect><path d="M3 9h18M3 15h18"></path></svg>
+            <p style="font-size:14px; color:#555;">Próximamente</p>
+          </div>
+        </section>
+      </div>
+
       <!-- Productos -->
       <div class="tab-panel" data-panel="productos">
         <section>
@@ -417,6 +521,59 @@
             <button class="btn-accent" id="addPrepBtn" style="padding:8px;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg></button>
           </div>
         </section>
+
+        <!-- Config Rotulados -->
+        <section style="margin-top:0;">
+          <div class="section-title">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
+            <h2>Configuración rotulados</h2>
+          </div>
+
+          <!-- Complejidad -->
+          <div class="card" style="padding:14px; margin-bottom:10px;">
+            <div style="font-size:11px;font-weight:700;color:#9BA1A4;text-transform:uppercase;letter-spacing:.7px;margin-bottom:10px;">Complejidad ($/m²)</div>
+            <div class="grid2">
+              <div>
+                <span class="label">Baja</span>
+                <input id="rotCompBaja"  type="number" inputmode="decimal" class="field mono rot-config" data-rot-config="complejidad.baja"  placeholder="0" />
+              </div>
+              <div>
+                <span class="label">Media</span>
+                <input id="rotCompMedia" type="number" inputmode="decimal" class="field mono rot-config" data-rot-config="complejidad.media" placeholder="0" />
+              </div>
+              <div>
+                <span class="label">Alta</span>
+                <input id="rotCompAlta"  type="number" inputmode="decimal" class="field mono rot-config" data-rot-config="complejidad.alta"  placeholder="0" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Tiempo -->
+          <div class="card" style="padding:14px; margin-bottom:10px;">
+            <div style="font-size:11px;font-weight:700;color:#9BA1A4;text-transform:uppercase;letter-spacing:.7px;margin-bottom:10px;">Tiempo ($/m²)</div>
+            <div class="grid2">
+              <div>
+                <span class="label">Rápido</span>
+                <input id="rotTiempoRapido" type="number" inputmode="decimal" class="field mono rot-config" data-rot-config="tiempo.rapido" placeholder="0" />
+              </div>
+              <div>
+                <span class="label">Medio</span>
+                <input id="rotTiempoMedio"  type="number" inputmode="decimal" class="field mono rot-config" data-rot-config="tiempo.medio"  placeholder="0" />
+              </div>
+              <div>
+                <span class="label">Lento</span>
+                <input id="rotTiempoLento"  type="number" inputmode="decimal" class="field mono rot-config" data-rot-config="tiempo.lento"  placeholder="0" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Margen -->
+          <div class="card" style="padding:14px;">
+            <div style="font-size:11px;font-weight:700;color:#9BA1A4;text-transform:uppercase;letter-spacing:.7px;margin-bottom:10px;">Margen de ganancia rotulados (%)</div>
+            <input id="rotMargenPct" type="number" inputmode="decimal" class="field mono rot-config" data-rot-config="margenPct" placeholder="30" style="max-width:120px;" />
+            <p style="font-size:11px;color:#555;margin-top:6px;">El precio de venta se calcula sumando este margen sobre el costo total.</p>
+          </div>
+        </section>
       </div>
       <!-- Bases -->
       <div class="tab-panel" data-panel="bases">
@@ -452,6 +609,16 @@
       { id: "b1", name: "Corrugado 3mm", ancho: 100, alto: 70, gramaje: "", costoPlancha: 0, ventaPlancha: 0 },
       { id: "b2", name: "Bicapa 3mm",    ancho: 200, alto: 100, gramaje: "", costoPlancha: 0, ventaPlancha: 0 }
     ],
+    rotulados: {
+      vinilos: [
+        { id: "rv1", name: "Vinilo blanco brillante", precioRollo: 0 },
+        { id: "rv2", name: "Vinilo transparente",     precioRollo: 0 }
+      ],
+      posicionadorPrecio: 0,
+      complejidad: { baja: 0, media: 0, alta: 0 },
+      tiempo:      { rapido: 0, medio: 0, lento: 0 },
+      margenPct:   30
+    },
     prepCharges: [
       { id: "p0", name: "Archivo listo para imprimir", price: 0 },
       { id: "p1", name: "Acomodar archivo", price: 1000 },
@@ -1261,7 +1428,215 @@
     }
   }
 
-  // ── CARTELERÍA ─────────────────────────────────────────────────────────
+  // ── ROTULADOS ──────────────────────────────────────────────────────────
+  var rot = { viniloId: "", ancho: "", alto: "", complejidad: "baja", tiempo: "rapido" };
+
+  // Ancho fijo vinilo: 60cm, largo rollo: 50m → 30m²
+  // Posicionador: 30cm × 40m = 12m²
+  var ROT_VINILO_ANCHO_M  = 0.60;
+  var ROT_VINILO_LARGO_M  = 50;
+  var ROT_POS_ANCHO_M     = 0.30;
+  var ROT_POS_LARGO_M     = 40;
+
+  function rotViniloCostoM2(v) {
+    var area = ROT_VINILO_ANCHO_M * ROT_VINILO_LARGO_M;
+    if (!v || !v.precioRollo || area <= 0) return 0;
+    return num(v.precioRollo) / area;
+  }
+
+  function rotPosicionadorCostoM2() {
+    var area = ROT_POS_ANCHO_M * ROT_POS_LARGO_M;
+    var precio = num(data.rotulados.posicionadorPrecio);
+    if (!precio || area <= 0) return 0;
+    return precio / area;
+  }
+
+  function renderRotVinilosList() {
+    var el = document.getElementById("rotVinilosList");
+    if (!el) return;
+    var vinilos = data.rotulados.vinilos || [];
+    if (!vinilos.length) { el.innerHTML = '<p class="empty-hint">Sin vinilos cargados</p>'; return; }
+    el.innerHTML = vinilos.map(function(v) {
+      var costoM2 = rotViniloCostoM2(v);
+      return (
+        '<div class="card" style="padding:10px 12px; margin-bottom:6px; display:grid; grid-template-columns:1fr auto auto; gap:8px; align-items:center;">' +
+          '<input class="field pname" style="font-size:13px;" data-rot-vinilo-field="name" data-rot-vinilo-id="' + v.id + '" value="' + esc(v.name) + '" />' +
+          '<div style="display:flex; flex-direction:column; gap:4px; min-width:180px;">' +
+            '<div style="display:flex; gap:6px; align-items:center;">' +
+              '<span class="label" style="margin:0; white-space:nowrap;">Precio rollo ($)</span>' +
+              '<input type="number" inputmode="decimal" class="field mono" style="width:100px;" data-rot-vinilo-field="precioRollo" data-rot-vinilo-id="' + v.id + '" value="' + (v.precioRollo||"") + '" placeholder="0" />' +
+            '</div>' +
+            (costoM2 > 0 ? '<div style="font-size:11px; color:#4ADE80; text-align:right;">→ $' + fmt(costoM2) + '/m²</div>' : '') +
+          '</div>' +
+          '<button data-rot-vinilo-delete="' + v.id + '" class="btn-icon">' +
+            '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path></svg>' +
+          '</button>' +
+        '</div>'
+      );
+    }).join("");
+
+    // Actualizar select del cotizador
+    renderRotViniloSel();
+  }
+
+  function renderRotViniloSel() {
+    var sel = document.getElementById("rotViniloSel");
+    if (!sel) return;
+    var vinilos = data.rotulados.vinilos || [];
+    sel.innerHTML = vinilos.map(function(v) {
+      return '<option value="' + v.id + '">' + esc(v.name) + '</option>';
+    }).join("");
+    if (!rot.viniloId && vinilos[0]) rot.viniloId = vinilos[0].id;
+    sel.value = rot.viniloId;
+  }
+
+  function renderRotPosicionador() {
+    var el = document.getElementById("rotPosicionadorM2");
+    if (!el) return;
+    var c = rotPosicionadorCostoM2();
+    el.textContent = c > 0 ? "$" + fmt(c) + "/m²" : "—";
+    el.style.color  = c > 0 ? "#4ADE80" : "#9BA1A4";
+  }
+
+  function renderRotOutput() {
+    var out = document.getElementById("rotOutput");
+    if (!out) return;
+    var ancho = num(rot.ancho) / 100;
+    var alto  = num(rot.alto)  / 100;
+    var m2    = ancho * alto;
+    if (m2 <= 0) { out.innerHTML = ""; return; }
+
+    var vinilo   = (data.rotulados.vinilos||[]).find(function(v) { return v.id === rot.viniloId; });
+    var vCostoM2 = rotViniloCostoM2(vinilo);
+    var pCostoM2 = rotPosicionadorCostoM2();
+    var compM2   = num((data.rotulados.complejidad||{})[rot.complejidad] || 0);
+    var tiempoM2 = num((data.rotulados.tiempo||{})[rot.tiempo]          || 0);
+    var margenPct= num(data.rotulados.margenPct || 30);
+
+    var costoM2Total  = vCostoM2 + pCostoM2 + compM2 + tiempoM2;
+    var costoTotal    = costoM2Total * m2;
+    var ventaTotal    = margenPct < 100 ? costoTotal / (1 - margenPct / 100) : costoTotal;
+    var margenReal    = ventaTotal > 0 ? ((ventaTotal - costoTotal) / ventaTotal) * 100 : 0;
+    var mColor        = margenReal >= 30 ? "#4ADE80" : margenReal >= 15 ? "#F5C24B" : "#F87171";
+
+    function row(l, v) { return '<div class="quote-out-row"><span class="l">' + l + '</span><span class="v">' + v + '</span></div>'; }
+
+    var html = '<div class="card" style="padding:16px;">';
+    html += '<div style="font-size:11px;font-weight:700;color:#9BA1A4;text-transform:uppercase;letter-spacing:.7px;margin-bottom:10px;">Desglose</div>';
+    html += row('Superficie', fmt(m2) + ' m²');
+    html += '<div style="border-top:1px solid #2a2e31;margin:8px 0;"></div>';
+    if (vinilo) html += row(esc(vinilo.name), '$' + fmt(vCostoM2 * m2));
+    html += row('Posicionador', '$' + fmt(pCostoM2 * m2));
+    if (compM2 > 0) html += row('Complejidad ' + rot.complejidad, '$' + fmt(compM2 * m2));
+    if (tiempoM2 > 0) html += row('Tiempo ' + rot.tiempo, '$' + fmt(tiempoM2 * m2));
+    html += '<div style="border-top:1px solid #2a2e31;margin:8px 0;"></div>';
+    html += row('Costo total', '<strong>$' + fmt(costoTotal) + '</strong>');
+    html += row('Margen (' + fmt(margenPct) + '%)', '<span style="color:' + mColor + ';">+$' + fmt(ventaTotal - costoTotal) + '</span>');
+    html += '<div class="final-box" style="margin-top:12px;">';
+    html += '<span class="label2">Precio de venta</span>';
+    html += '<span class="value" style="color:#4ADE80;">$' + fmt(ventaTotal) + '</span>';
+    html += '</div></div>';
+    out.innerHTML = html;
+  }
+
+  function attachRotListeners() {
+    // Vinilos list
+    var vl = document.getElementById("rotVinilosList");
+    if (!vl) return;
+    vl.addEventListener("input", function(e) {
+      var inp = e.target.closest("[data-rot-vinilo-field]");
+      if (!inp) return;
+      var id    = inp.getAttribute("data-rot-vinilo-id");
+      var field = inp.getAttribute("data-rot-vinilo-field");
+      var v = (data.rotulados.vinilos||[]).find(function(x) { return x.id === id; });
+      if (!v) return;
+      v[field] = field === "name" ? inp.value : num(inp.value);
+      // Update inline cost display without re-rendering
+      var card = inp.closest(".card");
+      if (card && field === "precioRollo") {
+        var c = rotViniloCostoM2(v);
+        var hint = card.querySelector("[data-rot-cost-hint]");
+        if (!hint) {
+          var wrap = inp.parentElement;
+          hint = document.createElement("div");
+          hint.setAttribute("data-rot-cost-hint","1");
+          hint.style.cssText = "font-size:11px;color:#4ADE80;text-align:right;";
+          wrap.appendChild(hint);
+        }
+        hint.textContent = c > 0 ? "→ $" + fmt(c) + "/m²" : "";
+        renderRotViniloSel();
+      }
+      renderRotOutput();
+      saveData();
+    });
+    vl.addEventListener("click", function(e) {
+      var del = e.target.closest("[data-rot-vinilo-delete]");
+      if (del) {
+        var id = del.getAttribute("data-rot-vinilo-delete");
+        data.rotulados.vinilos = data.rotulados.vinilos.filter(function(v) { return v.id !== id; });
+        renderRotVinilosList();
+        renderRotOutput();
+        saveData();
+      }
+    });
+    document.getElementById("addRotViniloBtn").addEventListener("click", function() {
+      var inp = document.getElementById("newRotVinilo");
+      if (!inp.value.trim()) return;
+      var id = "rv" + Date.now();
+      data.rotulados.vinilos.push({ id:id, name:inp.value.trim(), precioRollo:0 });
+      inp.value = "";
+      renderRotVinilosList();
+      saveData();
+    });
+    // Posicionador
+    document.getElementById("rotPosicionadorPrecio").addEventListener("input", function(e) {
+      data.rotulados.posicionadorPrecio = num(e.target.value);
+      renderRotPosicionador();
+      renderRotOutput();
+      saveData();
+    });
+    // Cotizador
+    document.getElementById("rotViniloSel").addEventListener("change", function(e) { rot.viniloId = e.target.value; renderRotOutput(); });
+    document.getElementById("rotAncho").addEventListener("input", function(e) { rot.ancho = e.target.value; renderRotOutput(); });
+    document.getElementById("rotAlto").addEventListener("input",  function(e) { rot.alto  = e.target.value; renderRotOutput(); });
+    document.querySelectorAll(".rot-comp").forEach(function(btn) {
+      btn.addEventListener("click", function() {
+        rot.complejidad = this.getAttribute("data-rot-comp");
+        document.querySelectorAll(".rot-comp").forEach(function(b) { b.classList.remove("active"); });
+        this.classList.add("active");
+        renderRotOutput();
+      });
+    });
+    document.querySelectorAll(".rot-tiempo").forEach(function(btn) {
+      btn.addEventListener("click", function() {
+        rot.tiempo = this.getAttribute("data-rot-tiempo");
+        document.querySelectorAll(".rot-tiempo").forEach(function(b) { b.classList.remove("active"); });
+        this.classList.add("active");
+        renderRotOutput();
+      });
+    });
+
+    // Config fields in Preparación
+    document.querySelectorAll(".rot-config").forEach(function(inp) {
+      var key = inp.getAttribute("data-rot-config");
+      var keys = key.split(".");
+      var val = keys.length === 2 ? (data.rotulados[keys[0]]||{})[keys[1]] : data.rotulados[key];
+      if (val !== undefined && val !== 0) inp.value = val;
+      inp.addEventListener("input", function() {
+        var v = num(this.value);
+        if (keys.length === 2) {
+          if (!data.rotulados[keys[0]]) data.rotulados[keys[0]] = {};
+          data.rotulados[keys[0]][keys[1]] = v;
+        } else {
+          data.rotulados[key] = v;
+        }
+        renderRotOutput();
+        saveData();
+      });
+    });
+  }
+
+  // ── FIN ROTULADOS ──────────────────────────────────────────────────────
   var cart = {
     unit: "cm", width: "", height: "",
     materialId: "", baseId: "", prepIds: [], minPrice: 0
@@ -1388,10 +1763,18 @@
 
   async function init() {
     await loadData();
+    if (!data.rotulados) data.rotulados = {
+      vinilos: [], posicionadorPrecio: 0,
+      complejidad: { baja: 0, media: 0, alta: 0 },
+      tiempo: { rapido: 0, medio: 0, lento: 0 },
+      margenPct: 30
+    };
     renderInkTab();
     renderPrepRows();
     renderProductsList();
     renderBasesList();
+    renderRotVinilosList();
+    renderRotPosicionador();
     renderQuoteProductOptions();
     renderQuotePrepChecklist();
     renderCartSelects();
@@ -1402,6 +1785,7 @@
     renderQuoteOutput();
     attachListeners();
     attachCartListeners();
+    attachRotListeners();
   }
 
   init();
