@@ -374,21 +374,6 @@
             </div>
           </div>
 
-          <!-- Posicionador -->
-          <div class="card" style="padding:14px; margin-bottom:10px;">
-            <div style="font-size:11px;font-weight:700;color:#9BA1A4;text-transform:uppercase;letter-spacing:.7px;margin-bottom:10px;">Posicionador <span style="color:#555;font-weight:400;">(30 cm × 40 m fijo)</span></div>
-            <div class="grid2">
-              <div>
-                <span class="label">Precio del rollo ($)</span>
-                <input id="rotPosicionadorPrecio" type="number" inputmode="decimal" class="field mono" placeholder="0" />
-              </div>
-              <div>
-                <span class="label">Costo / m²</span>
-                <div id="rotPosicionadorM2" class="field mono" style="background:#1a1e21; color:#9BA1A4; display:flex; align-items:center;">—</div>
-              </div>
-            </div>
-          </div>
-
           <!-- Calculadora de cotización -->
           <div class="card" style="padding:14px; margin-bottom:10px;">
             <div style="font-size:11px;font-weight:700;color:#9BA1A4;text-transform:uppercase;letter-spacing:.7px;margin-bottom:12px;">Cotizar trabajo</div>
@@ -509,71 +494,78 @@
 
       <!-- Cargos de preparación -->
       <div class="tab-panel" data-panel="prep">
-        <section>
-          <div class="section-title">
-            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
-            <h2>Cargos de preparación</h2>
-          </div>
-          <div id="prepRows"></div>
-          <div class="dashed row add-row">
-            <input id="newPrepName" class="field name" placeholder="Nuevo cargo (ej: Retoque de foto)" />
-            <input id="newPrepPrice" type="number" inputmode="decimal" class="field price mono" placeholder="$" />
-            <button class="btn-accent" id="addPrepBtn" style="padding:8px;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg></button>
-          </div>
-        </section>
+        <!-- Sub-tabs -->
+        <div style="display:flex; gap:8px; padding:20px 20px 0;">
+          <button class="unit-btn active" id="prepSubCargos" style="text-transform:none; padding:9px 20px; border-radius:20px;">Cargos de producción</button>
+          <button class="unit-btn"        id="prepSubRot"    style="text-transform:none; padding:9px 20px; border-radius:20px;">Rotulados</button>
+        </div>
 
-        <!-- Config Rotulados -->
-        <section style="margin-top:0;">
-          <div class="section-title">
-            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
-            <h2>Configuración rotulados</h2>
-          </div>
+        <!-- Panel: Cargos de producción -->
+        <div id="prepPanelCargos">
+          <section>
+            <div class="section-title">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+              <h2>Cargos de producción</h2>
+            </div>
+            <div id="prepRows"></div>
+            <div class="dashed row add-row">
+              <input id="newPrepName" class="field name" placeholder="Nuevo cargo (ej: Retoque de foto)" />
+              <input id="newPrepPrice" type="number" inputmode="decimal" class="field price mono" placeholder="$" />
+              <button class="btn-accent" id="addPrepBtn" style="padding:8px;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg></button>
+            </div>
+          </section>
+        </div>
 
-          <!-- Complejidad -->
-          <div class="card" style="padding:14px; margin-bottom:10px;">
-            <div style="font-size:11px;font-weight:700;color:#9BA1A4;text-transform:uppercase;letter-spacing:.7px;margin-bottom:10px;">Complejidad ($/m²)</div>
-            <div class="grid2">
-              <div>
-                <span class="label">Baja</span>
-                <input id="rotCompBaja"  type="number" inputmode="decimal" class="field mono rot-config" data-rot-config="complejidad.baja"  placeholder="0" />
-              </div>
-              <div>
-                <span class="label">Media</span>
-                <input id="rotCompMedia" type="number" inputmode="decimal" class="field mono rot-config" data-rot-config="complejidad.media" placeholder="0" />
-              </div>
-              <div>
-                <span class="label">Alta</span>
-                <input id="rotCompAlta"  type="number" inputmode="decimal" class="field mono rot-config" data-rot-config="complejidad.alta"  placeholder="0" />
+        <!-- Panel: Rotulados config -->
+        <div id="prepPanelRot" style="display:none;">
+          <section>
+            <div class="section-title">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
+              <h2>Configuración rotulados</h2>
+            </div>
+
+            <!-- Posicionador -->
+            <div class="card" style="padding:14px; margin-bottom:10px;">
+              <div style="font-size:11px;font-weight:700;color:#9BA1A4;text-transform:uppercase;letter-spacing:.7px;margin-bottom:10px;">Posicionador <span style="color:#555;font-weight:400;">(30 cm × 40 m)</span></div>
+              <div class="grid2">
+                <div>
+                  <span class="label">Precio del rollo ($)</span>
+                  <input id="rotPosicionadorPrecio" type="number" inputmode="decimal" class="field mono" placeholder="0" />
+                </div>
+                <div>
+                  <span class="label">Costo / m²</span>
+                  <div id="rotPosicionadorM2" class="field mono" style="background:#1a1e21; color:#9BA1A4; display:flex; align-items:center;">—</div>
+                </div>
               </div>
             </div>
-          </div>
 
-          <!-- Tiempo -->
-          <div class="card" style="padding:14px; margin-bottom:10px;">
-            <div style="font-size:11px;font-weight:700;color:#9BA1A4;text-transform:uppercase;letter-spacing:.7px;margin-bottom:10px;">Tiempo ($/m²)</div>
-            <div class="grid2">
-              <div>
-                <span class="label">Rápido</span>
-                <input id="rotTiempoRapido" type="number" inputmode="decimal" class="field mono rot-config" data-rot-config="tiempo.rapido" placeholder="0" />
-              </div>
-              <div>
-                <span class="label">Medio</span>
-                <input id="rotTiempoMedio"  type="number" inputmode="decimal" class="field mono rot-config" data-rot-config="tiempo.medio"  placeholder="0" />
-              </div>
-              <div>
-                <span class="label">Lento</span>
-                <input id="rotTiempoLento"  type="number" inputmode="decimal" class="field mono rot-config" data-rot-config="tiempo.lento"  placeholder="0" />
+            <!-- Complejidad -->
+            <div class="card" style="padding:14px; margin-bottom:10px;">
+              <div style="font-size:11px;font-weight:700;color:#9BA1A4;text-transform:uppercase;letter-spacing:.7px;margin-bottom:10px;">Complejidad ($/m²)</div>
+              <div class="grid2">
+                <div><span class="label">Baja</span><input id="rotCompBaja"  type="number" inputmode="decimal" class="field mono rot-config" data-rot-config="complejidad.baja"  placeholder="0" /></div>
+                <div><span class="label">Media</span><input id="rotCompMedia" type="number" inputmode="decimal" class="field mono rot-config" data-rot-config="complejidad.media" placeholder="0" /></div>
+                <div><span class="label">Alta</span><input id="rotCompAlta"  type="number" inputmode="decimal" class="field mono rot-config" data-rot-config="complejidad.alta"  placeholder="0" /></div>
               </div>
             </div>
-          </div>
 
-          <!-- Margen -->
-          <div class="card" style="padding:14px;">
-            <div style="font-size:11px;font-weight:700;color:#9BA1A4;text-transform:uppercase;letter-spacing:.7px;margin-bottom:10px;">Margen de ganancia rotulados (%)</div>
-            <input id="rotMargenPct" type="number" inputmode="decimal" class="field mono rot-config" data-rot-config="margenPct" placeholder="30" style="max-width:120px;" />
-            <p style="font-size:11px;color:#555;margin-top:6px;">El precio de venta se calcula sumando este margen sobre el costo total.</p>
-          </div>
-        </section>
+            <!-- Tiempo -->
+            <div class="card" style="padding:14px; margin-bottom:10px;">
+              <div style="font-size:11px;font-weight:700;color:#9BA1A4;text-transform:uppercase;letter-spacing:.7px;margin-bottom:10px;">Tiempo ($/m²)</div>
+              <div class="grid2">
+                <div><span class="label">Rápido</span><input id="rotTiempoRapido" type="number" inputmode="decimal" class="field mono rot-config" data-rot-config="tiempo.rapido" placeholder="0" /></div>
+                <div><span class="label">Medio</span><input id="rotTiempoMedio"  type="number" inputmode="decimal" class="field mono rot-config" data-rot-config="tiempo.medio"  placeholder="0" /></div>
+                <div><span class="label">Lento</span><input id="rotTiempoLento"  type="number" inputmode="decimal" class="field mono rot-config" data-rot-config="tiempo.lento"  placeholder="0" /></div>
+              </div>
+            </div>
+
+            <!-- Margen -->
+            <div class="card" style="padding:14px;">
+              <div style="font-size:11px;font-weight:700;color:#9BA1A4;text-transform:uppercase;letter-spacing:.7px;margin-bottom:10px;">Margen de ganancia (%)</div>
+              <input id="rotMargenPct" type="number" inputmode="decimal" class="field mono rot-config" data-rot-config="margenPct" placeholder="30" style="max-width:120px;" />
+            </div>
+          </section>
+        </div>
       </div>
       <!-- Bases -->
       <div class="tab-panel" data-panel="bases">
@@ -611,8 +603,8 @@
     ],
     rotulados: {
       vinilos: [
-        { id: "rv1", name: "Vinilo blanco brillante", precioRollo: 0 },
-        { id: "rv2", name: "Vinilo transparente",     precioRollo: 0 }
+        { id: "rv1", name: "Vinilo blanco brillante", precioMetro: 0, anchoM: 60 },
+        { id: "rv2", name: "Vinilo transparente",     precioMetro: 0, anchoM: 60 }
       ],
       posicionadorPrecio: 0,
       complejidad: { baja: 0, media: 0, alta: 0 },
@@ -1431,17 +1423,15 @@
   // ── ROTULADOS ──────────────────────────────────────────────────────────
   var rot = { viniloId: "", ancho: "", alto: "", complejidad: "baja", tiempo: "rapido" };
 
-  // Ancho fijo vinilo: 60cm, largo rollo: 50m → 30m²
   // Posicionador: 30cm × 40m = 12m²
-  var ROT_VINILO_ANCHO_M  = 0.60;
-  var ROT_VINILO_LARGO_M  = 50;
-  var ROT_POS_ANCHO_M     = 0.30;
-  var ROT_POS_LARGO_M     = 40;
+  var ROT_POS_ANCHO_M = 0.30;
+  var ROT_POS_LARGO_M = 40;
 
   function rotViniloCostoM2(v) {
-    var area = ROT_VINILO_ANCHO_M * ROT_VINILO_LARGO_M;
-    if (!v || !v.precioRollo || area <= 0) return 0;
-    return num(v.precioRollo) / area;
+    // Precio por metro lineal, ancho en cm
+    var anchoM = num(v.anchoM || 60) / 100;
+    if (!v || !v.precioMetro || anchoM <= 0) return 0;
+    return num(v.precioMetro) / anchoM;
   }
 
   function rotPosicionadorCostoM2() {
@@ -1458,19 +1448,32 @@
     if (!vinilos.length) { el.innerHTML = '<p class="empty-hint">Sin vinilos cargados</p>'; return; }
     el.innerHTML = vinilos.map(function(v) {
       var costoM2 = rotViniloCostoM2(v);
+      var ancho = v.anchoM || 60;
       return (
-        '<div class="card" style="padding:10px 12px; margin-bottom:6px; display:grid; grid-template-columns:1fr auto auto; gap:8px; align-items:center;">' +
-          '<input class="field pname" style="font-size:13px;" data-rot-vinilo-field="name" data-rot-vinilo-id="' + v.id + '" value="' + esc(v.name) + '" />' +
-          '<div style="display:flex; flex-direction:column; gap:4px; min-width:180px;">' +
-            '<div style="display:flex; gap:6px; align-items:center;">' +
-              '<span class="label" style="margin:0; white-space:nowrap;">Precio rollo ($)</span>' +
-              '<input type="number" inputmode="decimal" class="field mono" style="width:100px;" data-rot-vinilo-field="precioRollo" data-rot-vinilo-id="' + v.id + '" value="' + (v.precioRollo||"") + '" placeholder="0" />' +
-            '</div>' +
-            (costoM2 > 0 ? '<div style="font-size:11px; color:#4ADE80; text-align:right;">→ $' + fmt(costoM2) + '/m²</div>' : '') +
+        '<div class="card" style="padding:12px; margin-bottom:8px;">' +
+          '<div style="display:grid; grid-template-columns:1fr auto; gap:8px; margin-bottom:10px; align-items:center;">' +
+            '<input class="field pname" style="font-size:13px;" data-rot-vinilo-field="name" data-rot-vinilo-id="' + v.id + '" value="' + esc(v.name) + '" />' +
+            '<button data-rot-vinilo-delete="' + v.id + '" class="btn-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path></svg></button>' +
           '</div>' +
-          '<button data-rot-vinilo-delete="' + v.id + '" class="btn-icon">' +
-            '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path></svg>' +
-          '</button>' +
+          '<div class="grid2">' +
+            '<div>' +
+              '<span class="label">Ancho del material</span>' +
+              '<div class="row" style="gap:6px;">' +
+                '<button class="unit-btn rot-vinilo-ancho ' + (ancho==60?"active":"") + '" data-rot-vinilo-id="' + v.id + '" data-rot-vinilo-ancho="60">60 cm</button>' +
+                '<button class="unit-btn rot-vinilo-ancho ' + (ancho==120?"active":"") + '" data-rot-vinilo-id="' + v.id + '" data-rot-vinilo-ancho="120">120 cm</button>' +
+              '</div>' +
+            '</div>' +
+            '<div>' +
+              '<span class="label">Precio por metro lineal ($)</span>' +
+              '<input type="number" inputmode="decimal" class="field mono" data-rot-vinilo-field="precioMetro" data-rot-vinilo-id="' + v.id + '" value="' + (v.precioMetro||"") + '" placeholder="0" />' +
+            '</div>' +
+          '</div>' +
+          (costoM2 > 0 ? (
+            '<div style="margin-top:8px; padding:8px 10px; background:#1a2520; border-radius:6px; display:flex; justify-content:space-between; align-items:center;">' +
+              '<span style="font-size:11px;color:#9BA1A4;">Costo por m² calculado</span>' +
+              '<span style="font-size:15px;font-weight:700;color:#4ADE80;">$' + fmt(costoM2) + '/m²</span>' +
+            '</div>'
+          ) : '') +
         '</div>'
       );
     }).join("");
@@ -1614,6 +1617,36 @@
         this.classList.add("active");
         renderRotOutput();
       });
+    });
+
+    // Prep sub-tabs
+    document.getElementById("prepSubCargos").addEventListener("click", function() {
+      document.getElementById("prepPanelCargos").style.display = "block";
+      document.getElementById("prepPanelRot").style.display    = "none";
+      this.classList.add("active");
+      document.getElementById("prepSubRot").classList.remove("active");
+    });
+    document.getElementById("prepSubRot").addEventListener("click", function() {
+      document.getElementById("prepPanelCargos").style.display = "none";
+      document.getElementById("prepPanelRot").style.display    = "block";
+      this.classList.add("active");
+      document.getElementById("prepSubCargos").classList.remove("active");
+    });
+
+    // Vinilo ancho buttons
+    document.getElementById("rotVinilosList").addEventListener("click", function(e) {
+      var anchoBtn = e.target.closest("[data-rot-vinilo-ancho]");
+      if (anchoBtn) {
+        var id    = anchoBtn.getAttribute("data-rot-vinilo-id");
+        var ancho = parseInt(anchoBtn.getAttribute("data-rot-vinilo-ancho"));
+        var v = (data.rotulados.vinilos||[]).find(function(x) { return x.id === id; });
+        if (!v) return;
+        v.anchoM = ancho;
+        renderRotVinilosList();
+        renderRotOutput();
+        saveData();
+        return;
+      }
     });
 
     // Config fields in Preparación
