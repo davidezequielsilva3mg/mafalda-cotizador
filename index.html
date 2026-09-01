@@ -703,6 +703,7 @@
             if (p.rollWidthM === undefined) p.rollWidthM = 0;
           });
           if (!data.bases) data.bases = JSON.parse(JSON.stringify(DEFAULT_DATA.bases));
+          data.prepCharges.forEach(function(p) { if (p.porM2 === undefined) p.porM2 = false; });
           quote.productId = data.products[0] ? data.products[0].id : "1";
           quote.prepIds = [];
         }
@@ -742,11 +743,16 @@
   function renderPrepRows() {
     var el = document.getElementById("prepRows");
     el.innerHTML = data.prepCharges.map(function (p) {
+      var isPorM2 = p.porM2 === true;
       return (
         '<div class="card row prep-row" data-prep-id="' + p.id + '">' +
           '<input class="field name" data-prep-field="name" data-prep-id="' + p.id + '" value="' + esc(p.name) + '" />' +
           '<span class="mono" style="color:#9BA1A4; font-size:13px;">$</span>' +
           '<input type="number" inputmode="decimal" class="field price mono" data-prep-field="price" data-prep-id="' + p.id + '" value="' + p.price + '" />' +
+          '<button data-prep-toggle-m2="' + p.id + '" title="' + (isPorM2 ? "Por m² — clic para cambiar a fijo" : "Precio fijo — clic para cambiar a por m²") + '" ' +
+            'style="padding:3px 8px;border-radius:6px;border:1.5px solid ' + (isPorM2 ? "#FF6A2B" : "#3a3f42") + ';background:' + (isPorM2 ? "#2a1800" : "transparent") + ';color:' + (isPorM2 ? "#FF6A2B" : "#555") + ';font-size:10px;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0;">' +
+            (isPorM2 ? "$/m²" : "fijo") +
+          '</button>' +
           '<button class="btn-icon" data-prep-delete="' + p.id + '">' +
             '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path><path d="M10 11v6"></path><path d="M14 11v6"></path></svg>' +
           '</button>' +
@@ -767,7 +773,7 @@
         '<label class="card prep-check-row">' +
           '<input type="checkbox" data-prep-check="' + p.id + '"' + (checked ? " checked" : "") + ' />' +
           '<span class="pname">' + esc(p.name) + '</span>' +
-          '<span class="pprice mono">$' + fmt(p.price) + '</span>' +
+          '<span class="pprice mono">$' + fmt(p.price) + (p.porM2 ? '/m²' : '') + '</span>' +
         '</label>'
       );
     }).join("");
@@ -1047,7 +1053,12 @@
       priceBaseM2 = Math.max(priceBySurface, num(product.minPrice));
     }
 
-    var prepValue = selectedPreps.reduce(function (sum, p) { return sum + num(p.price); }, 0);
+    // Separar cargos fijos de cargos por m²
+    var prepFixed = selectedPreps.filter(function(p) { return !p.porM2; })
+                                 .reduce(function(sum, p) { return sum + num(p.price); }, 0);
+    var prepPerM2 = selectedPreps.filter(function(p) { return p.porM2; })
+                                 .reduce(function(sum, p) { return sum + num(p.price); }, 0);
+    var prepValue = prepFixed + prepPerM2 * billableArea;
     var recommended = hasArea ? priceBaseM2 + prepValue : 0;
     var profit = recommended - costTotal;
     var margin = recommended > 0 ? (profit / recommended) * 100 : 0;
@@ -1093,7 +1104,9 @@
     html += '<div class="spacer"></div>';
     if (selectedPreps.length > 0) {
       selectedPreps.forEach(function (p) {
-        html += row(esc(p.name), "$" + fmt(num(p.price)));
+        var amount = p.porM2 ? num(p.price) * billableArea : num(p.price);
+        var label = esc(p.name) + (p.porM2 ? ' <span class="note-tag">×' + fmt(billableArea) + 'm²</span>' : '');
+        html += row(label, "$" + fmt(amount));
       });
       html += row("→ Total cargos de preparación", "$" + fmt(prepValue), { strong: true });
     } else {
@@ -1155,6 +1168,21 @@
       saveData();
     });
     document.getElementById("prepRows").addEventListener("click", function (e) {
+      // Toggle porM2
+      var toggleBtn = e.target.closest("[data-prep-toggle-m2]");
+      if (toggleBtn) {
+        var tid = toggleBtn.getAttribute("data-prep-toggle-m2");
+        var pr = data.prepCharges.find(function(x) { return x.id === tid; });
+        if (pr) {
+          pr.porM2 = !pr.porM2;
+          renderPrepRows();
+          renderQuotePrepChecklist();
+          renderCartPrepList();
+          renderQuoteOutput();
+          saveData();
+        }
+        return;
+      }
       var btn = e.target.closest("[data-prep-delete]");
       if (!btn) return;
       var id = btn.getAttribute("data-prep-delete");
@@ -1169,7 +1197,7 @@
       var priceEl = document.getElementById("newPrepPrice");
       if (!nameEl.value.trim()) return;
       var id = Date.now().toString();
-      data.prepCharges.push({ id: id, name: nameEl.value.trim(), price: num(priceEl.value) });
+      data.prepCharges.push({ id: id, name: nameEl.value.trim(), price: num(priceEl.value), porM2: false });
       nameEl.value = "";
       priceEl.value = "";
       renderPrepRows();
