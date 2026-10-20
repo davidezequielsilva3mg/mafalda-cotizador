@@ -352,26 +352,18 @@
 
       <!-- Rotulados -->
       <div class="tab-panel" data-panel="rotulados">
-        <div class="panel-2col">
+        <!-- Sub-tabs rotulados -->
+        <div style="display:flex; gap:8px; padding:20px 20px 0;">
+          <button class="unit-btn active" id="rotSubCotizar" style="text-transform:none; padding:9px 20px; border-radius:20px;">Cotizar trabajo</button>
+          <button class="unit-btn"        id="rotSubInsumos" style="text-transform:none; padding:9px 20px; border-radius:20px;">Insumos</button>
+        </div>
+        <div id="rotPanelCotizar" class="panel-2col">
         <div class="panel-2col-left">
 
           <!-- Vinilos de rotulado -->
           <div class="section-title" style="margin-top:20px;">
             <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
             <h2>Rotulados</h2>
-          </div>
-
-          <!-- Vinilos -->
-          <div class="card" style="padding:14px; margin-bottom:10px;">
-            <div style="font-size:11px;font-weight:700;color:#9BA1A4;text-transform:uppercase;letter-spacing:.7px;margin-bottom:10px;">Vinilos de rotulado <span style="color:#555;font-weight:400;">(ancho fijo: 60 cm)</span></div>
-            <div id="rotVinilosList"></div>
-            <div class="dashed row" style="padding:10px; margin-top:8px; gap:8px;">
-              <input id="newRotVinilo" class="field" placeholder="Nombre del vinilo (ej: Vinilo blanco brillante)" style="flex:2;" />
-              <button class="btn-accent" id="addRotViniloBtn">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                Agregar
-              </button>
-            </div>
           </div>
 
           <!-- Calculadora de cotización -->
@@ -415,6 +407,69 @@
           <div id="rotOutput"></div>
         </div><!-- end right -->
         </div><!-- end panel-2col -->
+
+        <!-- Insumos de rotulado -->
+        <div id="rotPanelInsumos" style="display:none;">
+          <section>
+            <div class="section-title">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
+              <h2>Insumos de rotulado</h2>
+            </div>
+          <!-- Vinilos -->
+          <div class="card" style="padding:14px; margin-bottom:10px;">
+            <div style="font-size:11px;font-weight:700;color:#9BA1A4;text-transform:uppercase;letter-spacing:.7px;margin-bottom:10px;">Vinilos de rotulado <span style="color:#555;font-weight:400;">(ancho fijo: 60 cm)</span></div>
+            <div id="rotVinilosList"></div>
+            <div class="dashed row" style="padding:10px; margin-top:8px; gap:8px;">
+              <input id="newRotVinilo" class="field" placeholder="Nombre del vinilo (ej: Vinilo blanco brillante)" style="flex:2;" />
+              <button class="btn-accent" id="addRotViniloBtn">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                Agregar
+              </button>
+            </div>
+          </div>
+
+            <!-- Posicionador -->
+            <div class="card" style="padding:14px; margin-bottom:10px;">
+              <div style="font-size:11px;font-weight:700;color:#9BA1A4;text-transform:uppercase;letter-spacing:.7px;margin-bottom:10px;">Posicionador <span style="color:#555;font-weight:400;">(30 cm × 40 m)</span></div>
+              <div class="grid2">
+                <div>
+                  <span class="label">Precio del rollo ($)</span>
+                  <input id="rotPosicionadorPrecio" type="number" inputmode="decimal" class="field mono" placeholder="0" />
+                </div>
+                <div>
+                  <span class="label">Costo / m²</span>
+                  <div id="rotPosicionadorM2" class="field mono" style="background:#1a1e21; color:#9BA1A4; display:flex; align-items:center;">—</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Complejidad -->
+            <div class="card" style="padding:14px; margin-bottom:10px;">
+              <div style="font-size:11px;font-weight:700;color:#9BA1A4;text-transform:uppercase;letter-spacing:.7px;margin-bottom:10px;">Complejidad ($/m²)</div>
+              <div class="grid2">
+                <div><span class="label">Baja</span><input id="rotCompBaja"  type="number" inputmode="decimal" class="field mono rot-config" data-rot-config="complejidad.baja"  placeholder="0" /></div>
+                <div><span class="label">Media</span><input id="rotCompMedia" type="number" inputmode="decimal" class="field mono rot-config" data-rot-config="complejidad.media" placeholder="0" /></div>
+                <div><span class="label">Alta</span><input id="rotCompAlta"  type="number" inputmode="decimal" class="field mono rot-config" data-rot-config="complejidad.alta"  placeholder="0" /></div>
+              </div>
+            </div>
+
+            <!-- Tiempo -->
+            <div class="card" style="padding:14px; margin-bottom:10px;">
+              <div style="font-size:11px;font-weight:700;color:#9BA1A4;text-transform:uppercase;letter-spacing:.7px;margin-bottom:10px;">Tiempo ($/m²)</div>
+              <div class="grid2">
+                <div><span class="label">Rápido</span><input id="rotTiempoRapido" type="number" inputmode="decimal" class="field mono rot-config" data-rot-config="tiempo.rapido" placeholder="0" /></div>
+                <div><span class="label">Medio</span><input id="rotTiempoMedio"  type="number" inputmode="decimal" class="field mono rot-config" data-rot-config="tiempo.medio"  placeholder="0" /></div>
+                <div><span class="label">Lento</span><input id="rotTiempoLento"  type="number" inputmode="decimal" class="field mono rot-config" data-rot-config="tiempo.lento"  placeholder="0" /></div>
+              </div>
+            </div>
+
+            <!-- Margen -->
+            <div class="card" style="padding:14px;">
+              <div style="font-size:11px;font-weight:700;color:#9BA1A4;text-transform:uppercase;letter-spacing:.7px;margin-bottom:10px;">Margen de ganancia (%)</div>
+              <input id="rotMargenPct" type="number" inputmode="decimal" class="field mono rot-config" data-rot-config="margenPct" placeholder="30" style="max-width:120px;" />
+            </div>
+          </section>
+        </div>
       </div>
 
       <!-- Polyfan -->
@@ -555,11 +610,6 @@
 
       <!-- Cargos de preparación -->
       <div class="tab-panel" data-panel="prep">
-        <!-- Sub-tabs -->
-        <div style="display:flex; gap:8px; padding:20px 20px 0;">
-          <button class="unit-btn active" id="prepSubCargos" style="text-transform:none; padding:9px 20px; border-radius:20px;">Cargos de producción</button>
-          <button class="unit-btn"        id="prepSubRot"    style="text-transform:none; padding:9px 20px; border-radius:20px;">Rotulados</button>
-        </div>
 
         <!-- Panel: Cargos de producción -->
         <div id="prepPanelCargos">
@@ -577,56 +627,6 @@
           </section>
         </div>
 
-        <!-- Panel: Rotulados config -->
-        <div id="prepPanelRot" style="display:none;">
-          <section>
-            <div class="section-title">
-              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
-              <h2>Configuración rotulados</h2>
-            </div>
-
-            <!-- Posicionador -->
-            <div class="card" style="padding:14px; margin-bottom:10px;">
-              <div style="font-size:11px;font-weight:700;color:#9BA1A4;text-transform:uppercase;letter-spacing:.7px;margin-bottom:10px;">Posicionador <span style="color:#555;font-weight:400;">(30 cm × 40 m)</span></div>
-              <div class="grid2">
-                <div>
-                  <span class="label">Precio del rollo ($)</span>
-                  <input id="rotPosicionadorPrecio" type="number" inputmode="decimal" class="field mono" placeholder="0" />
-                </div>
-                <div>
-                  <span class="label">Costo / m²</span>
-                  <div id="rotPosicionadorM2" class="field mono" style="background:#1a1e21; color:#9BA1A4; display:flex; align-items:center;">—</div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Complejidad -->
-            <div class="card" style="padding:14px; margin-bottom:10px;">
-              <div style="font-size:11px;font-weight:700;color:#9BA1A4;text-transform:uppercase;letter-spacing:.7px;margin-bottom:10px;">Complejidad ($/m²)</div>
-              <div class="grid2">
-                <div><span class="label">Baja</span><input id="rotCompBaja"  type="number" inputmode="decimal" class="field mono rot-config" data-rot-config="complejidad.baja"  placeholder="0" /></div>
-                <div><span class="label">Media</span><input id="rotCompMedia" type="number" inputmode="decimal" class="field mono rot-config" data-rot-config="complejidad.media" placeholder="0" /></div>
-                <div><span class="label">Alta</span><input id="rotCompAlta"  type="number" inputmode="decimal" class="field mono rot-config" data-rot-config="complejidad.alta"  placeholder="0" /></div>
-              </div>
-            </div>
-
-            <!-- Tiempo -->
-            <div class="card" style="padding:14px; margin-bottom:10px;">
-              <div style="font-size:11px;font-weight:700;color:#9BA1A4;text-transform:uppercase;letter-spacing:.7px;margin-bottom:10px;">Tiempo ($/m²)</div>
-              <div class="grid2">
-                <div><span class="label">Rápido</span><input id="rotTiempoRapido" type="number" inputmode="decimal" class="field mono rot-config" data-rot-config="tiempo.rapido" placeholder="0" /></div>
-                <div><span class="label">Medio</span><input id="rotTiempoMedio"  type="number" inputmode="decimal" class="field mono rot-config" data-rot-config="tiempo.medio"  placeholder="0" /></div>
-                <div><span class="label">Lento</span><input id="rotTiempoLento"  type="number" inputmode="decimal" class="field mono rot-config" data-rot-config="tiempo.lento"  placeholder="0" /></div>
-              </div>
-            </div>
-
-            <!-- Margen -->
-            <div class="card" style="padding:14px;">
-              <div style="font-size:11px;font-weight:700;color:#9BA1A4;text-transform:uppercase;letter-spacing:.7px;margin-bottom:10px;">Margen de ganancia (%)</div>
-              <input id="rotMargenPct" type="number" inputmode="decimal" class="field mono rot-config" data-rot-config="margenPct" placeholder="30" style="max-width:120px;" />
-            </div>
-          </section>
-        </div>
       </div>
       <!-- Bases -->
       <div class="tab-panel" data-panel="bases">
@@ -1712,18 +1712,19 @@
       });
     });
 
-    // Prep sub-tabs
-    document.getElementById("prepSubCargos").addEventListener("click", function() {
-      document.getElementById("prepPanelCargos").style.display = "block";
-      document.getElementById("prepPanelRot").style.display    = "none";
+    // Rotulados sub-tabs
+    document.getElementById("rotSubCotizar").addEventListener("click", function() {
+      document.getElementById("rotPanelCotizar").style.display = "";
+      document.getElementById("rotPanelInsumos").style.display = "none";
       this.classList.add("active");
-      document.getElementById("prepSubRot").classList.remove("active");
+      document.getElementById("rotSubInsumos").classList.remove("active");
+      renderRotViniloSel(); renderRotOutput();
     });
-    document.getElementById("prepSubRot").addEventListener("click", function() {
-      document.getElementById("prepPanelCargos").style.display = "none";
-      document.getElementById("prepPanelRot").style.display    = "block";
+    document.getElementById("rotSubInsumos").addEventListener("click", function() {
+      document.getElementById("rotPanelCotizar").style.display = "none";
+      document.getElementById("rotPanelInsumos").style.display = "block";
       this.classList.add("active");
-      document.getElementById("prepSubCargos").classList.remove("active");
+      document.getElementById("rotSubCotizar").classList.remove("active");
     });
 
     // Vinilo ancho buttons
