@@ -932,6 +932,19 @@
     el.innerHTML = data.bases.map(baseCardHTML).join("");
   }
 
+  // Aviso: el costo vino de una compra registrada en la app (Producción → Insumos)
+  function compraHTML(item, valorActual) {
+    var c = item && item.ultimaCompra;
+    if (!c || !c.fecha) return "";
+    var f = c.fecha.split("-").reverse().join("/");
+    var antes = num(c.antes), pct = antes > 0 ? Math.round((num(valorActual) - antes) / antes * 100) : 0;
+    return '<div style="background:#13233a;border:1px solid #2b4a70;border-radius:8px;padding:8px 12px;margin-bottom:10px;font-size:12px;color:#9cc4f0;">' +
+      '🛒 Costo actualizado desde la compra del <b>' + f + '</b>' + (c.proveedor ? ' (' + esc(c.proveedor) + ')' : '') +
+      (antes > 0 && pct !== 0 ? ' · antes $' + fmt(antes) + ' <b style="color:' + (pct > 0 ? '#ff8a80' : '#4ADE80') + '">' + (pct > 0 ? '▲ ' : '▼ ') + Math.abs(pct) + '%</b>' : '') +
+      (pct > 0 ? '<div style="color:#ffcc80;margin-top:3px;">Revisá el precio de venta: el margen de abajo ya está calculado con el costo nuevo.</div>' : '') +
+    '</div>';
+  }
+
   // ---------- render: productos ----------
   function productCardHTML(p) {
     var wasteFactor = 1 + num(p.wastePct) / 100;
@@ -1019,7 +1032,7 @@
             '</button>' +
             '<div class="product-body' + (isOpen ? ' open' : '') + '">' +
               '<input class="field pname" data-product-field="name" data-product-id="' + p.id + '" value="' + esc(p.name) + '" />' +
-              rollCalcHTML + '<div class="grid2">' + fieldsHTML + '</div>' +
+              compraHTML(p, p.rollPrice) + rollCalcHTML + '<div class="grid2">' + fieldsHTML + '</div>' +
               '<div class="quote-out-row" style="margin-top:10px; padding-top:10px; border-top:1px solid #2a2e31;">' +
                 '<span class="l">Costo tinta / m² <span class="note-tag">DESDE TINTAS</span></span>' +
                 '<span class="v">$' + fmt(inkM2) + '</span>' +
@@ -1548,6 +1561,7 @@
             '<input class="field pname" style="font-size:13px;" data-rot-vinilo-field="name" data-rot-vinilo-id="' + v.id + '" value="' + esc(v.name) + '" />' +
             '<button data-rot-vinilo-delete="' + v.id + '" class="btn-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path></svg></button>' +
           '</div>' +
+          compraHTML(v, v.precioMetro) +
           '<div class="grid2">' +
             '<div>' +
               '<span class="label">Ancho del material</span>' +
